@@ -401,8 +401,44 @@
     .small{margin-top:14px;color:var(--muted);font-size:.92rem;line-height:1.5}
     .footerNote{margin-top:10px;font-size:.9rem;color:var(--muted)}
 
+    .mobileScrollHint,
+    .legendSwipeHint{
+      display:none;
+      margin:4px 0 12px;
+      padding:8px 12px;
+      border:1px solid rgba(215,162,74,.48);
+      border-radius:999px;
+      background:rgba(232,210,167,.10);
+      color:var(--parchment-2);
+      font-size:.82rem;
+      font-weight:800;
+      font-family:var(--headline-font);
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      text-align:center;
+    }
+    .mobileScrollHint.show,
+    .legendSwipeHint.show{display:block}
+    .legendScroll{
+      overflow-x:visible;
+    }
+
     @media (max-width:1020px){.dashboardGrid{grid-template-columns:1fr}}
-    @media (max-width:720px){.controls{grid-template-columns:1fr}.btnRow{grid-template-columns:1fr}.selectedFigure{align-items:flex-start}}
+    @media (max-width:720px){
+      .controls{grid-template-columns:1fr}
+      .btnRow{grid-template-columns:1fr}
+      .selectedFigure{align-items:flex-start}
+      .mobileScrollHint.show,
+      .legendSwipeHint.show{display:block}
+      .legendScroll{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+        padding-bottom:6px;
+      }
+      .legendTable{
+        min-width:620px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -421,6 +457,7 @@
       <div class="topBarLeft"><span class="badge" id="globalBadge"></span><span class="badge" id="globalFiguresBadge"></span></div>
     </div>
     <div class="rowTitle" id="subjectsTitle">Choose a Subject</div>
+    <div class="mobileScrollHint" id="subjectScrollHint"></div>
     <div class="subjectGrid" id="subjectGrid"></div>
   </section>
 
@@ -430,6 +467,7 @@
       <button class="btnGold" id="randomFigureBtn">🎲 Random Figure</button>
     </div>
     <div class="rowTitle" id="figuresTitle">Choose a Figure</div>
+    <div class="mobileScrollHint" id="figureScrollHint"></div>
     <div class="figureGrid" id="figureGrid"></div>
   </section>
 
@@ -476,7 +514,8 @@
         <div class="meterCard"><strong id="progressTitle">Subject Progress</strong><div class="meterTrack"><div class="meterFill" id="meterFill"></div></div><div class="meterText" id="meterText"></div></div>
         <div class="legend">
           <span class="legendTitle" id="legendTitle">Word Key for Young Learners</span>
-          <table class="legendTable">
+          <div class="legendSwipeHint" id="legendSwipeHint"></div>
+          <div class="legendScroll" id="legendScroll"><table class="legendTable">
             <thead><tr><th>Word Type</th><th>Role</th><th>Examples</th></tr></thead>
             <tbody>
               <tr><td><span class="choice choice-noun">Noun</span></td><td>Object / Thing</td><td>Telescope, Medal, Bridge</td></tr>
@@ -487,7 +526,7 @@
               <tr><td><span class="choice choice-trait">Trait / Celebration</span></td><td>Feeling / Character</td><td>Hopeful, Courageous, Hooray</td></tr>
               <tr><td><span class="choice choice-history">Real History Fact</span></td><td>True biography detail</td><td>Birth year, school, movement, invention</td></tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
         <div class="storyBox"><div id="storyText"><em style="color:var(--muted);">Your story is hidden right now. Pick your words, then press <strong>Build Story</strong>.</em></div></div>
         <div class="footerNote" id="voiceStatus">Build a story first, then press Play Back to hear it.</div>
@@ -532,7 +571,7 @@ const TRANSLATIONS = {
     figuresReady: 'Figures Ready', subjectsLoaded: 'Subjects Loaded',
     storyReadySuffix: 'story ready',
     resetProgress: 'Reset Progress', resetConfirm: 'Reset all saved progress for every subject? This cannot be undone.', resetDone: 'Progress reset. Ready for a new class.',
-    reading: 'Reading story out loud...', finished: 'Playback finished.', stopped: 'Playback stopped.', noStory: 'Build a story first before using playback.', noSpeech: 'This browser does not support speech playback.', speechError: 'Voice playback hit a snag on this device.'
+    reading: 'Reading story out loud...', finished: 'Playback finished.', stopped: 'Playback stopped.', noStory: 'Build a story first before using playback.', noSpeech: 'This browser does not support speech playback.', speechError: 'Voice playback hit a snag on this device.', scrollHintSubjects: 'Swipe ← → to see more subjects', scrollHintFigures: 'Swipe ← → to see more figures', legendSwipeHint: 'Swipe ← → to read the legend'
   },
   es: {
     heroTitle: 'Arcade de Mad Libs de Historia Afroamericana WGLT',
@@ -566,7 +605,7 @@ const TRANSLATIONS = {
     figuresReady: 'Figuras listas', subjectsLoaded: 'Materias cargadas',
     storyReadySuffix: 'historia lista',
     resetProgress: 'Reiniciar Progreso', resetConfirm: '¿Reiniciar todo el progreso guardado de todas las materias? Esto no se puede deshacer.', resetDone: 'Progreso reiniciado. Listo para una nueva clase.',
-    reading: 'Leyendo la historia en voz alta...', finished: 'La reproducción terminó.', stopped: 'La reproducción se detuvo.', noStory: 'Primero crea una historia antes de usar la voz.', noSpeech: 'Este navegador no admite reproducción de voz.', speechError: 'La reproducción de voz tuvo un problema en este dispositivo.'
+    reading: 'Leyendo la historia en voz alta...', finished: 'La reproducción terminó.', stopped: 'La reproducción se detuvo.', noStory: 'Primero crea una historia antes de usar la voz.', noSpeech: 'Este navegador no admite reproducción de voz.', speechError: 'La reproducción de voz tuvo un problema en este dispositivo.', scrollHintSubjects: 'Desliza ← → para ver más materias', scrollHintFigures: 'Desliza ← → para ver más figuras', legendSwipeHint: 'Desliza ← → para leer la guía'
   }
 };
 
@@ -900,7 +939,7 @@ const els = {
   adjective1: document.getElementById('adjective1'), adjective2: document.getElementById('adjective2'), noun1: document.getElementById('noun1'), noun2: document.getElementById('noun2'), place1: document.getElementById('place1'), verb1: document.getElementById('verb1'), verb2: document.getElementById('verb2'), adverb1: document.getElementById('adverb1'), quality1: document.getElementById('quality1'), celebration1: document.getElementById('celebration1'),
   buildBtn: document.getElementById('buildBtn'), randomWordsBtn: document.getElementById('randomWordsBtn'), speakBtn: document.getElementById('speakBtn'), stopBtn: document.getElementById('stopBtn'), backToSubjectsBtn: document.getElementById('backToSubjectsBtn'), backToFiguresBtn: document.getElementById('backToFiguresBtn'), randomFigureBtn: document.getElementById('randomFigureBtn'), randomCurrentSubjectBtn: document.getElementById('randomCurrentSubjectBtn'),
   storyText: document.getElementById('storyText'), storyBadge: document.getElementById('storyBadge'), voiceStatus: document.getElementById('voiceStatus'), meterFill: document.getElementById('meterFill'), meterText: document.getElementById('meterText'), progressTitle: document.getElementById('progressTitle'), figureChecklist: document.getElementById('figureChecklist'),
-  langEnBtn: document.getElementById('langEnBtn'), langEsBtn: document.getElementById('langEsBtn'), heroTitle: document.getElementById('heroTitle'), heroDesc: document.getElementById('heroDesc'), subjectsTitle: document.getElementById('subjectsTitle'), figuresTitle: document.getElementById('figuresTitle'), legendTitle: document.getElementById('legendTitle'), trackerTitle: document.getElementById('trackerTitle'), resetProgressBtn: document.getElementById('resetProgressBtn')
+  langEnBtn: document.getElementById('langEnBtn'), langEsBtn: document.getElementById('langEsBtn'), heroTitle: document.getElementById('heroTitle'), heroDesc: document.getElementById('heroDesc'), subjectsTitle: document.getElementById('subjectsTitle'), figuresTitle: document.getElementById('figuresTitle'), legendTitle: document.getElementById('legendTitle'), trackerTitle: document.getElementById('trackerTitle'), resetProgressBtn: document.getElementById('resetProgressBtn'), subjectScrollHint: document.getElementById('subjectScrollHint'), figureScrollHint: document.getElementById('figureScrollHint'), legendSwipeHint: document.getElementById('legendSwipeHint'), legendScroll: document.getElementById('legendScroll')
 };
 
 let currentSubject = null, currentFigure = null, currentStory = '';
@@ -909,6 +948,27 @@ let progress = loadProgress();
 function wrapChoice(type, value){ return `<span class="choice choice-${type}">${value}</span>`; }
 function t(key){ return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS.en[key] || key; }
 function stripHtml(html){ const div=document.createElement('div'); div.innerHTML=html; return div.textContent || div.innerText || ''; }
+
+function isMobileHintsView(){ return window.innerWidth <= 720; }
+function refreshScrollHint(targetEl, hintEl, text){
+  if(!targetEl || !hintEl) return;
+  hintEl.textContent = text;
+  const overflow = isMobileHintsView() && (targetEl.scrollWidth > targetEl.clientWidth + 8);
+  hintEl.classList.toggle('show', overflow);
+}
+function refreshAllScrollHints(){
+  refreshScrollHint(els.subjectGrid, els.subjectScrollHint, t('scrollHintSubjects'));
+  refreshScrollHint(els.figureGrid, els.figureScrollHint, t('scrollHintFigures'));
+  refreshScrollHint(els.legendScroll, els.legendSwipeHint, t('legendSwipeHint'));
+}
+function hideHintOnScroll(targetEl, hintEl){
+  if(!targetEl || !hintEl) return;
+  targetEl.addEventListener('scroll', () => {
+    if(targetEl.scrollLeft > 4){
+      hintEl.classList.remove('show');
+    }
+  }, { passive:true });
+}
 function translateStoryHtmlToSpanish(html){
   const replacements = [
     ['Hi, my name is ', 'Hola, mi nombre es '],
@@ -1039,6 +1099,7 @@ function applyLanguage(){
   els.trackerTitle.textContent = t('progressTracker');
   els.resetProgressBtn.textContent = t('resetProgress');
   if(!currentFigure){ els.selectedName.textContent = t('chooseFigurePrompt'); els.selectedSubtitle.textContent = t('chooseFigureSub'); }
+  refreshAllScrollHints();
 }
 
 function renderLegendTable(){
@@ -1092,6 +1153,7 @@ function renderSubjects(){
     card.addEventListener('click', ()=>chooseSubject(subject.id));
     els.subjectGrid.appendChild(card);
   });
+  refreshAllScrollHints();
 }
 
 function chooseSubject(subjectId){
@@ -1123,6 +1185,7 @@ function renderFigures(){
     card.addEventListener('click', ()=>chooseFigure(fig.id));
     els.figureGrid.appendChild(card);
   });
+  refreshAllScrollHints();
 }
 
 function chooseRandomFigure(){ if(!currentSubject) return; chooseFigure(randomFrom(currentSubject.figures).id); }
@@ -1138,6 +1201,7 @@ function chooseFigure(figureId){
   resetStoryPreview();
   updateProgressPanel();
   switchScreen('builder');
+  refreshAllScrollHints();
 }
 
 function getSelections(){
@@ -1216,6 +1280,7 @@ function init(){
   resetStoryPreview();
   switchScreen('subject');
   notifyWixReady();
+  refreshAllScrollHints();
 }
 
 els.backToSubjectsBtn.addEventListener('click',()=>{ stopStory(); renderSubjects(); switchScreen('subject'); });
@@ -1230,6 +1295,11 @@ els.resetProgressBtn.addEventListener('click',resetAllProgress);
 els.langEnBtn.addEventListener('click',()=>setLanguage('en'));
 els.langEsBtn.addEventListener('click',()=>setLanguage('es'));
 [els.adjective1,els.adjective2,els.noun1,els.noun2,els.place1,els.verb1,els.verb2,els.adverb1,els.quality1,els.celebration1].forEach(el=>el.addEventListener('change',resetStoryPreview));
+
+hideHintOnScroll(els.subjectGrid, els.subjectScrollHint);
+hideHintOnScroll(els.figureGrid, els.figureScrollHint);
+hideHintOnScroll(els.legendScroll, els.legendSwipeHint);
+window.addEventListener('resize', refreshAllScrollHints);
 window.addEventListener('load', notifyWixReady);
 setTimeout(notifyWixReady, 1500);
 init();
