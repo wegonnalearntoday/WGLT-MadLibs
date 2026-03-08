@@ -1323,6 +1323,36 @@ window.addEventListener("load", function () {
   }
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+ const hint=document.getElementById("mobileScrollHint");
+ if(!hint) return;
+ const isMobile = window.innerWidth < 720;
+ if(!isMobile) return;
+
+ function show(msg){
+   hint.textContent=msg;
+   hint.classList.add("show");
+   setTimeout(()=>hint.classList.remove("show"),3000);
+ }
+
+ // detect grids
+ const subjectGrid=document.getElementById("subjectGrid");
+ const figureGrid=document.getElementById("figureGrid");
+
+ if(subjectGrid){
+   show("Swipe ← → to see more subjects");
+   subjectGrid.addEventListener("scroll",()=>hint.classList.remove("show"),{once:true});
+ }
+
+ if(figureGrid){
+   figureGrid.addEventListener("mouseenter",()=>show("Swipe ← → to see more figures"));
+   figureGrid.addEventListener("scroll",()=>hint.classList.remove("show"),{once:true});
+ }
+});
+</script>
+
 </body>
 </html>
 <!DOCTYPE html>
@@ -2517,6 +2547,43 @@ els.langEsBtn.addEventListener('click',()=>setLanguage('es'));
 window.addEventListener('load', notifyWixReady);
 setTimeout(notifyWixReady, 1500);
 init();
+</script>
+<script>
+/* Notify Wix loader that the HTML game is ready */
+window.addEventListener("load", function () {
+  if (window.parent) {
+    window.parent.postMessage({ type: "WGLT_READY" }, "*");
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+ const hint=document.getElementById("mobileScrollHint");
+ if(!hint) return;
+ const isMobile = window.innerWidth < 720;
+ if(!isMobile) return;
+
+ function show(msg){
+   hint.textContent=msg;
+   hint.classList.add("show");
+   setTimeout(()=>hint.classList.remove("show"),3000);
+ }
+
+ // detect grids
+ const subjectGrid=document.getElementById("subjectGrid");
+ const figureGrid=document.getElementById("figureGrid");
+
+ if(subjectGrid){
+   show("Swipe ← → to see more subjects");
+   subjectGrid.addEventListener("scroll",()=>hint.classList.remove("show"),{once:true});
+ }
+
+ if(figureGrid){
+   figureGrid.addEventListener("mouseenter",()=>show("Swipe ← → to see more figures"));
+   figureGrid.addEventListener("scroll",()=>hint.classList.remove("show"),{once:true});
+ }
+});
 </script>
 <script>
 /* Notify Wix loader that the HTML game is ready */
