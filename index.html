@@ -6,11 +6,22 @@
   <title>WGLT Black History Mad Libs Arcade</title>
   <style>
     :root{
-      --bg:#0f1115; --panel:#171a21; --text:#f5f7fb; --muted:#b7bccb;
-      --red:#d62828; --green:#1b8a5a; --gold:#f4c542; --blue:#56c7ff;
-      --pink:#ff69b4; --purple:#a462ff; --line:#313746;
-      --shadow:0 12px 30px rgba(0,0,0,.35); --radius:20px;
+      --bg:#0f1115;
+      --panel:#171a21;
+      --text:#f5f7fb;
+      --muted:#b7bccb;
+      --red:#d62828;
+      --green:#1b8a5a;
+      --gold:#f4c542;
+      --blue:#56c7ff;
+      --pink:#ff69b4;
+      --purple:#a462ff;
+      --line:#313746;
+      --shadow:0 12px 30px rgba(0,0,0,.35);
+      --radius:20px;
+      --cardW:240px;
     }
+
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     body{
@@ -19,54 +30,250 @@
         radial-gradient(circle at top left, rgba(244,197,66,.14), transparent 28%),
         radial-gradient(circle at top right, rgba(214,40,40,.16), transparent 28%),
         linear-gradient(180deg, #0d0f14, #121722 65%, #0d1118);
-      color:var(--text); min-height:100vh; padding:20px;
+      color:var(--text);
+      min-height:100vh;
+      padding:20px;
     }
-    .wrap{max-width:1280px;margin:0 auto}
+
+    .wrap{max-width:1320px;margin:0 auto}
     .hero{
       background:linear-gradient(135deg, rgba(214,40,40,.18), rgba(27,138,90,.18));
-      border:1px solid rgba(255,255,255,.08); border-radius:24px; padding:22px;
-      box-shadow:var(--shadow); margin-bottom:18px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:24px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
     }
     .hero h1{margin:0 0 8px;font-size:clamp(1.8rem,4vw,3rem);line-height:1.05}
     .hero p{margin:0;color:var(--muted);font-size:1rem;line-height:1.5}
-    .screen{display:none}.screen.active{display:block}
-    .topBar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .hero{text-align:center}
+    .heroControls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .langBtn{min-width:120px}
+    .langBtn.active{box-shadow:0 0 0 2px rgba(255,255,255,.22) inset, 0 0 0 2px rgba(244,197,66,.35)}
+
+    .screen{display:none}
+    .screen.active{display:block}
+
+    .topBar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
     .topBarLeft{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .badge{display:inline-block;background:rgba(244,197,66,.15);color:var(--gold);border:1px solid rgba(244,197,66,.35);padding:6px 10px;border-radius:999px;font-size:.88rem;font-weight:800}
-    button{border:none;border-radius:14px;padding:12px 14px;font-size:.96rem;font-weight:800;cursor:pointer;transition:transform .15s ease}
-    button:hover{transform:translateY(-1px)} button:active{transform:translateY(1px)}
+
+    .badge{
+      display:inline-block;
+      background:rgba(244,197,66,.15);
+      color:var(--gold);
+      border:1px solid rgba(244,197,66,.35);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.88rem;
+      font-weight:800;
+    }
+
+    button{
+      border:none;
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:.96rem;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .15s ease, opacity .15s ease;
+    }
+    button:hover{transform:translateY(-1px)}
+    button:active{transform:translateY(1px)}
     .btnBlue{background:linear-gradient(180deg,#2b6ef2,#1c4fae);color:#fff}
     .btnGreen{background:linear-gradient(180deg,var(--green),#126646);color:#fff}
     .btnGold{background:linear-gradient(180deg,var(--gold),#d5a30f);color:#1b1300}
     .btnGray{background:linear-gradient(180deg,#6f7687,#4e5566);color:#fff}
-    .subjectGrid,.figureGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:18px}
-    .cardButton{width:100%;text-align:left;background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:14px;box-shadow:var(--shadow);color:var(--text)}
-    .cardButton:hover{border-color:rgba(244,197,66,.35)}
-    .subjectArt,.figureArt{width:100%;aspect-ratio:1/1;max-width:300px;margin:0 auto 12px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(214,40,40,.25), rgba(86,199,255,.22), rgba(27,138,90,.22))}
-    .artInner{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;background:radial-gradient(circle at 50% 35%, rgba(255,255,255,.1), transparent 30%)}
-    .initials{width:110px;height:110px;border-radius:50%;background:rgba(0,0,0,.28);border:2px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;margin-bottom:12px}
-    .artInner small{color:#eef7ff;font-size:.95rem;line-height:1.35;font-weight:700}
-    .cardButton h3{margin:0 0 6px;font-size:1.08rem}
-    .cardButton p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.45}
-    .dashboardGrid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;margin-top:18px}
-    .panel{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+
+    .rowTitle{
+      font-size:1.15rem;
+      font-weight:800;
+      margin:6px 0 8px;
+      color:#f3f7ff;
+    }
+
+    .subjectGrid,
+    .figureGrid{
+      display:flex;
+      gap:16px;
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding:8px 4px 16px;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    .subjectGrid::-webkit-scrollbar,
+    .figureGrid::-webkit-scrollbar{height:10px}
+    .subjectGrid::-webkit-scrollbar-thumb,
+    .figureGrid::-webkit-scrollbar-thumb{
+      background:rgba(255,255,255,.18);
+      border-radius:999px;
+    }
+
+    .cardButton{
+      flex:0 0 var(--cardW);
+      width:var(--cardW);
+      scroll-snap-align:start;
+      text-align:left;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      color:var(--text);
+    }
+    .cardButton:hover{
+      border-color:rgba(244,197,66,.35);
+      transform:translateY(-4px) scale(1.02);
+    }
+    .cardButton h3{margin:0 0 6px;font-size:1.04rem}
+    .cardButton p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.4}
+
+    .subjectPoster,
+    .figurePoster{
+      width:100%;
+      height:300px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(135deg, rgba(214,40,40,.25), rgba(86,199,255,.22), rgba(27,138,90,.22));
+      margin-bottom:12px;
+    }
+
+    .subjectImage,
+    .figureImage{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .posterFallback{
+      width:100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:14px;
+      background:radial-gradient(circle at 50% 35%, rgba(255,255,255,.1), transparent 30%);
+    }
+
+    .initials{
+      width:110px;
+      height:110px;
+      border-radius:50%;
+      background:rgba(0,0,0,.28);
+      border:2px solid rgba(255,255,255,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:2rem;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+    .posterFallback small{color:#eef7ff;font-size:.95rem;line-height:1.35;font-weight:700}
+
+    .dashboardGrid{
+      display:grid;
+      grid-template-columns:1.06fr .94fr;
+      gap:18px;
+      margin-top:18px;
+    }
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
     .panel h2{margin:0 0 14px;font-size:1.25rem}
-    .selectedFigure{display:flex;gap:14px;align-items:center;margin-bottom:14px;padding:12px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.03)}
-    .selectedThumb{width:94px;height:94px;border-radius:18px;background:linear-gradient(135deg, rgba(214,40,40,.25), rgba(86,199,255,.22), rgba(27,138,90,.22));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.4rem;flex:0 0 auto;border:1px solid rgba(255,255,255,.08)}
-    .selectedFigure h3{margin:0 0 4px}.selectedFigure p{margin:0;color:var(--muted)}
+
+    .selectedFigure{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      margin-bottom:14px;
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+    }
+    .selectedThumb{
+      width:94px;
+      height:94px;
+      border-radius:18px;
+      overflow:hidden;
+      background:linear-gradient(135deg, rgba(214,40,40,.25), rgba(86,199,255,.22), rgba(27,138,90,.22));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      font-size:1.4rem;
+      flex:0 0 auto;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .selectedThumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .selectedFigure h3{margin:0 0 4px}
+    .selectedFigure p{margin:0;color:var(--muted)}
+
     .controls{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     .field{display:flex;flex-direction:column;gap:7px}
     .field label{font-size:.95rem;color:#fff;font-weight:700}
-    select{width:100%;border:none;border-radius:14px;padding:13px 14px;font-size:1rem;font-weight:700;background:#f7f8fb;color:#1a1d24;outline:2px solid transparent}
+    select{
+      width:100%;
+      border:none;
+      border-radius:14px;
+      padding:13px 14px;
+      font-size:1rem;
+      font-weight:700;
+      background:#f7f8fb;
+      color:#1a1d24;
+      outline:2px solid transparent;
+    }
     select:focus{outline:2px solid var(--gold)}
-    .btnRow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}.btnRow.single{grid-template-columns:1fr;margin-top:10px}
-    .storyBox{min-height:390px;background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(255,255,255,.03));border:1px solid var(--line);border-radius:18px;padding:18px;font-size:1.08rem;line-height:1.8}
-    .legend{margin:0 0 12px 0;padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03)}
+
+    .btnRow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+    .btnRow.single{grid-template-columns:1fr;margin-top:10px}
+
+    .storyBox{
+      min-height:390px;
+      background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      font-size:1.08rem;
+      line-height:1.8;
+    }
+
+    .legend{
+      margin:0 0 12px 0;
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:rgba(255,255,255,.03);
+    }
     .legendTitle{display:block;margin-bottom:10px;color:var(--gold);font-weight:800}
     .legendTable{width:100%;border-collapse:collapse;font-size:.92rem;color:var(--muted)}
     .legendTable th,.legendTable td{border-bottom:1px solid rgba(255,255,255,.06);padding:8px 6px;text-align:left;vertical-align:top}
     .legendTable th{color:#f3f7ff;font-size:.88rem}
-    .choice{display:inline-block;padding:1px 8px;border-radius:999px;font-weight:800;margin:0 1px;box-shadow:0 0 0 1px rgba(255,255,255,.06) inset}
+
+    .choice{
+      display:inline-block;
+      padding:1px 8px;
+      border-radius:999px;
+      font-weight:800;
+      margin:0 1px;
+      box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;
+    }
     .choice-adjective{background:rgba(214,40,40,.22);color:#ffd9d9}
     .choice-noun{background:rgba(244,197,66,.22);color:#ffe9a6}
     .choice-verb{background:rgba(43,110,242,.24);color:#d8e6ff}
@@ -74,14 +281,26 @@
     .choice-place{background:rgba(86,199,255,.24);color:#dff6ff}
     .choice-trait{background:rgba(164,98,255,.24);color:#efe0ff}
     .choice-history{background:rgba(27,138,90,.28);color:#c9ffe7}
-    .meterCard{border:1px solid var(--line);border-radius:16px;padding:12px;background:rgba(255,255,255,.03);margin-bottom:14px}
+
+    .meterCard{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(255,255,255,.03);
+      margin-bottom:14px;
+    }
     .meterTrack{height:12px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-top:10px}
     .meterFill{height:100%;background:linear-gradient(90deg, var(--gold), #ffe37e);width:0%}
     .meterText{color:var(--muted);font-size:.92rem;margin-top:8px}
+
     .figureChecklist{display:grid;gap:8px;margin-top:10px}
     .checkItem{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(255,255,255,.06);border-radius:12px;background:rgba(255,255,255,.02)}
-    .starDone{color:var(--gold);font-weight:800}.starTodo{color:var(--muted)}
-    .small{margin-top:14px;color:var(--muted);font-size:.92rem;line-height:1.5}.footerNote{margin-top:10px;font-size:.9rem;color:var(--muted)}
+    .starDone{color:var(--gold);font-weight:800}
+    .starTodo{color:var(--muted)}
+
+    .small{margin-top:14px;color:var(--muted);font-size:.92rem;line-height:1.5}
+    .footerNote{margin-top:10px;font-size:.9rem;color:var(--muted)}
+
     @media (max-width:1020px){.dashboardGrid{grid-template-columns:1fr}}
     @media (max-width:720px){.controls{grid-template-columns:1fr}.btnRow{grid-template-columns:1fr}.selectedFigure{align-items:flex-start}}
   </style>
@@ -89,12 +308,19 @@
 <body>
 <div class="wrap">
   <section class="hero">
-    <h1>WGLT Black History Mad Libs Arcade</h1>
-    <p>Clean plug-and-play build. Choose a subject, tap a figure, pick words, then build a fact-based story that reads back out loud.</p>
+    <h1 id="heroTitle">WGLT Black History Mad Libs Arcade</h1>
+    <p id="heroDesc">Choose a subject, tap a figure, pick words, then build a fact-based story you can hear out loud.</p>
+    <div class="heroControls">
+      <button class="btnBlue langBtn active" id="langEnBtn" type="button">English</button>
+      <button class="btnGray langBtn" id="langEsBtn" type="button">Español</button>
+    </div>
   </section>
 
   <section id="subjectScreen" class="screen active">
-    <div class="topBar"><div class="topBarLeft"><span class="badge" id="globalBadge"></span><span class="badge" id="globalFiguresBadge"></span></div></div>
+    <div class="topBar">
+      <div class="topBarLeft"><span class="badge" id="globalBadge"></span><span class="badge" id="globalFiguresBadge"></span></div>
+    </div>
+    <div class="rowTitle" id="subjectsTitle">Choose a Subject</div>
     <div class="subjectGrid" id="subjectGrid"></div>
   </section>
 
@@ -103,6 +329,7 @@
       <div class="topBarLeft"><button class="btnBlue" id="backToSubjectsBtn">← Back to Subjects</button><span class="badge" id="subjectBadge"></span></div>
       <button class="btnGold" id="randomFigureBtn">🎲 Random Figure</button>
     </div>
+    <div class="rowTitle" id="figuresTitle">Choose a Figure</div>
     <div class="figureGrid" id="figureGrid"></div>
   </section>
 
@@ -114,7 +341,14 @@
 
     <div class="dashboardGrid">
       <div class="panel">
-        <div class="selectedFigure"><div class="selectedThumb" id="selectedThumb">BH</div><div><h3 id="selectedName">Choose a figure</h3><p id="selectedSubtitle">Pick words, then build the story.</p></div></div>
+        <div class="selectedFigure">
+          <div class="selectedThumb" id="selectedThumb">BH</div>
+          <div>
+            <h3 id="selectedName">Choose a figure</h3>
+            <p id="selectedSubtitle">Pick words, then build the story.</p>
+          </div>
+        </div>
+
         <h2>Story Builder</h2>
         <div class="controls">
           <div class="field"><label for="adjective1">Adjective 1</label><select id="adjective1"></select></div>
@@ -128,7 +362,12 @@
           <div class="field"><label for="quality1">Trait</label><select id="quality1"></select></div>
           <div class="field"><label for="celebration1">Celebration Word</label><select id="celebration1"></select></div>
         </div>
-        <div class="btnRow"><button class="btnGreen" id="buildBtn">Build Story</button><button class="btnGold" id="randomWordsBtn">Random Fill</button><button class="btnBlue" id="speakBtn">Play Back</button></div>
+
+        <div class="btnRow">
+          <button class="btnGreen" id="buildBtn">Build Story</button>
+          <button class="btnGold" id="randomWordsBtn">Random Fill</button>
+          <button class="btnBlue" id="speakBtn">Play Back</button>
+        </div>
         <div class="btnRow single"><button class="btnGray" id="stopBtn">Stop Voice</button></div>
         <div class="small">The story stays hidden until <strong>Build Story</strong> is pressed.</div>
       </div>
@@ -136,7 +375,7 @@
       <div class="panel">
         <div class="meterCard"><strong id="progressTitle">Subject Progress</strong><div class="meterTrack"><div class="meterFill" id="meterFill"></div></div><div class="meterText" id="meterText"></div></div>
         <div class="legend">
-          <span class="legendTitle">Word Key for Young Learners</span>
+          <span class="legendTitle" id="legendTitle">Word Key for Young Learners</span>
           <table class="legendTable">
             <thead><tr><th>Word Type</th><th>Role</th><th>Examples</th></tr></thead>
             <tbody>
@@ -144,7 +383,7 @@
               <tr><td><span class="choice choice-place">Proper Noun</span></td><td>Specific Name</td><td>Detroit, Harlem, Howard University</td></tr>
               <tr><td><span class="choice choice-verb">Verb</span></td><td>Action</td><td>Explore, Launch, Write</td></tr>
               <tr><td><span class="choice choice-adjective">Adjective</span></td><td>Description</td><td>Fearless, Golden, Shiny</td></tr>
-              <tr><td><span class="choice choice-adverb">Adverb</span></td><td>How it's done</td><td>Boldly, Gently, Loudly</td></tr>
+              <tr><td><span class="choice choice-adverb">Adverb</span></td><td>How it&apos;s done</td><td>Boldly, Gently, Loudly</td></tr>
               <tr><td><span class="choice choice-trait">Trait / Celebration</span></td><td>Feeling / Character</td><td>Hopeful, Courageous, Hooray</td></tr>
               <tr><td><span class="choice choice-history">Real History Fact</span></td><td>True biography detail</td><td>Birth year, school, movement, invention</td></tr>
             </tbody>
@@ -155,143 +394,362 @@
       </div>
     </div>
 
-    <div class="panel" style="margin-top:18px;"><h2>Subject Progress Tracker</h2><div class="figureChecklist" id="figureChecklist"></div></div>
+    <div class="panel" style="margin-top:18px;"><div class="topBar" style="margin-bottom:12px;"><h2 id="trackerTitle" style="margin:0;">Subject Progress Tracker</h2><button class="btnGray" id="resetProgressBtn" type="button">Reset Progress</button></div><div class="figureChecklist" id="figureChecklist"></div></div>
   </section>
 </div>
 
 <script>
-const storyBits = {
-  intro(name, bornOn, date, place){ return `Hi, my name is ${wrapHistory(name)}. I was born ${bornOn ? 'on ' : ''}${wrapHistory(date)} in ${wrapHistory(place)}.`; },
-  close(a1,a2,n1,n2,p,v1,v2,adv,t,c){ return ` In ${wrapChoice('place', p)}, my story still helps people ${wrapChoice('verb', v1)} and ${wrapChoice('verb', v2)} ${wrapChoice('adverb', adv)} with a ${wrapChoice('trait', t)} spirit. My legacy remains ${wrapChoice('adjective', a1)} and ${wrapChoice('adjective', a2)}, like a ${wrapChoice('noun', n1)} beside a ${wrapChoice('noun', n2)}. ${wrapChoice('trait', c)} for this history.`; }
+const TRANSLATIONS = {
+  en: {
+    heroTitle: 'WGLT Black History Mad Libs Arcade',
+    heroDesc: 'Choose a subject, tap a figure, pick words, then build a fact-based story you can hear out loud.',
+    chooseSubject: 'Choose a Subject',
+    chooseFigure: 'Choose a Figure',
+    backToSubjects: '← Back to Subjects',
+    backToFigures: '← Back to Figures',
+    randomFigure: '🎲 Random Figure',
+    readyToCreate: 'Ready to create',
+    storyBuilder: 'Story Builder',
+    adjective1: 'Adjective 1', adjective2: 'Adjective 2', noun1: 'Noun 1', noun2: 'Noun 2', place1: 'Proper Noun / Place', verb1: 'Verb 1', verb2: 'Verb 2', adverb1: 'Adverb', quality1: 'Trait', celebration1: 'Celebration Word',
+    buildStory: 'Build Story', randomFill: 'Random Fill', playBack: 'Play Back', stopVoice: 'Stop Voice',
+    hiddenHelp: 'The story stays hidden until Build Story is pressed.',
+    legendTitle: 'Word Key for Young Learners',
+    wordType: 'Word Type', role: 'Role', examples: 'Examples',
+    noun: 'Noun', nounRole: 'Object / Thing', nounEx: 'Telescope, Medal, Bridge',
+    properNoun: 'Proper Noun', properRole: 'Specific Name', properEx: 'Detroit, Harlem, Howard University',
+    verb: 'Verb', verbRole: 'Action', verbEx: 'Explore, Launch, Write',
+    adjective: 'Adjective', adjectiveRole: 'Description', adjectiveEx: 'Fearless, Golden, Shiny',
+    adverb: 'Adverb', adverbRole: "How it's done", adverbEx: 'Boldly, Gently, Loudly',
+    trait: 'Trait / Celebration', traitRole: 'Feeling / Character', traitEx: 'Hopeful, Courageous, Hooray',
+    history: 'Real History Fact', historyRole: 'True biography detail', historyEx: 'Birth year, school, movement, invention',
+    hiddenStory: 'Your story is hidden right now. Pick your words, then press Build Story.',
+    buildFirst: 'Build a story first, then press Play Back to hear it.',
+    progressTracker: 'Subject Progress Tracker',
+    subjectProgress: 'Subject Progress',
+    chooseFigurePrompt: 'Choose a figure',
+    chooseFigureSub: 'Pick words, then build the story.',
+    completed: '⭐ Completed', notPlayed: '☆ Not played yet', done: '⭐ Done', todo: '☆ To Do',
+    figuresReady: 'Figures Ready', subjectsLoaded: 'Subjects Loaded',
+    storyReadySuffix: 'story ready',
+    resetProgress: 'Reset Progress', resetConfirm: 'Reset all saved progress for every subject? This cannot be undone.', resetDone: 'Progress reset. Ready for a new class.',
+    reading: 'Reading story out loud...', finished: 'Playback finished.', stopped: 'Playback stopped.', noStory: 'Build a story first before using playback.', noSpeech: 'This browser does not support speech playback.', speechError: 'Voice playback hit a snag on this device.'
+  },
+  es: {
+    heroTitle: 'Arcade de Mad Libs de Historia Afroamericana WGLT',
+    heroDesc: 'Elige una materia, toca una figura, selecciona palabras y construye una historia basada en hechos que puedes escuchar en voz alta.',
+    chooseSubject: 'Elige una Materia',
+    chooseFigure: 'Elige una Figura',
+    backToSubjects: '← Volver a Materias',
+    backToFigures: '← Volver a Figuras',
+    randomFigure: '🎲 Figura Aleatoria',
+    readyToCreate: 'Listo para crear',
+    storyBuilder: 'Constructor de Historia',
+    adjective1: 'Adjetivo 1', adjective2: 'Adjetivo 2', noun1: 'Sustantivo 1', noun2: 'Sustantivo 2', place1: 'Nombre propio / Lugar', verb1: 'Verbo 1', verb2: 'Verbo 2', adverb1: 'Adverbio', quality1: 'Cualidad', celebration1: 'Palabra de celebración',
+    buildStory: 'Crear Historia', randomFill: 'Llenado Aleatorio', playBack: 'Escuchar', stopVoice: 'Detener Voz',
+    hiddenHelp: 'La historia permanece oculta hasta que presiones Crear Historia.',
+    legendTitle: 'Guía de Palabras para Jóvenes Estudiantes',
+    wordType: 'Tipo de palabra', role: 'Función', examples: 'Ejemplos',
+    noun: 'Sustantivo', nounRole: 'Objeto / Cosa', nounEx: 'Telescopio, Medalla, Puente',
+    properNoun: 'Nombre propio', properRole: 'Nombre específico', properEx: 'Detroit, Harlem, Howard University',
+    verb: 'Verbo', verbRole: 'Acción', verbEx: 'Explorar, Lanzar, Escribir',
+    adjective: 'Adjetivo', adjectiveRole: 'Descripción', adjectiveEx: 'Valiente, Dorado, Brillante',
+    adverb: 'Adverbio', adverbRole: 'Cómo se hace', adverbEx: 'Valientemente, Suavemente, Fuertemente',
+    trait: 'Cualidad / Celebración', traitRole: 'Sentimiento / Carácter', traitEx: 'Esperanzado, Valiente, Hurra',
+    history: 'Dato histórico real', historyRole: 'Detalle biográfico verdadero', historyEx: 'Año de nacimiento, escuela, movimiento, invento',
+    hiddenStory: 'Tu historia está oculta por ahora. Elige tus palabras y luego presiona Crear Historia.',
+    buildFirst: 'Primero crea una historia y luego presiona Escuchar para oírla.',
+    progressTracker: 'Seguimiento del Progreso por Materia',
+    subjectProgress: 'Progreso de la Materia',
+    chooseFigurePrompt: 'Elige una figura',
+    chooseFigureSub: 'Selecciona palabras y luego crea la historia.',
+    completed: '⭐ Completado', notPlayed: '☆ Aún no jugado', done: '⭐ Hecho', todo: '☆ Pendiente',
+    figuresReady: 'Figuras listas', subjectsLoaded: 'Materias cargadas',
+    storyReadySuffix: 'historia lista',
+    resetProgress: 'Reiniciar Progreso', resetConfirm: '¿Reiniciar todo el progreso guardado de todas las materias? Esto no se puede deshacer.', resetDone: 'Progreso reiniciado. Listo para una nueva clase.',
+    reading: 'Leyendo la historia en voz alta...', finished: 'La reproducción terminó.', stopped: 'La reproducción se detuvo.', noStory: 'Primero crea una historia antes de usar la voz.', noSpeech: 'Este navegador no admite reproducción de voz.', speechError: 'La reproducción de voz tuvo un problema en este dispositivo.'
+  }
 };
 
-function f(id,name,short,initials,cardHint,body){ return {id,name,short,initials,cardHint,template:body}; }
+const WORD_BANKS_BY_LANG = {
+  en: null,
+  es: {
+    adjective1:['valiente','sabio','audaz','poderoso','amable','intrépido','creativo','decidido','brillante','legendario','musical','dorado','heroico','curioso','inspirador','alegre'],
+    adjective2:['legendario','brillante','inolvidable','inspirador','poderoso','histórico','glorioso','espectacular','deslumbrante','eléctrico','valiente','alegre','fuerte','creativo','maravilloso','luminoso'],
+    noun1:['antorcha','tambor','libro','puente','bandera','micrófono','brújula','llave','telescopio','medalla','cohete','corona','linterna','rompecabezas','trompeta','cámara'],
+    noun2:['eco','estrella','río','llama','camino','campana','jardín','corona','mapa','motor','medalla','escudo','desfile','puente','casco','cuaderno'],
+    place1:['Montgomery','Washington, D.C.','Tuskegee','Atlanta','Boston','Pensilvania','Detroit','Chicago','Morehouse College','Harlem','Howard University','Apollo Theater','Brooklyn','UCLA','Stanford','un salón de clases'],
+    verb1:['elevarse','aprender','marchar','hablar','soñar','trabajar','defender','construir','explorar','lanzar','escribir','crear','rescatar','enseñar','organizar','inventar'],
+    verb2:['crecer','unir','liderar','brillar','avanzar','creer','cambiar la historia','seguir adelante','inspirar','descubrir','ayudar a otros','resolver problemas','iluminar el camino','enseñar a otros','romper barreras','transformar comunidades'],
+    adverb1:['valientemente','orgullosamente','cuidadosamente','sabiamente','pacientemente','brillantemente','poderosamente','suavemente','fuertemente','tranquilamente','rápidamente','alegremente','constantemente','creativamente','sin miedo','con esperanza'],
+    quality1:['esperanzado','fuerte','paciente','valiente','visionario','compasivo','constante','resiliente','alegre','decidido','atrevido','reflexivo'],
+    celebration1:['Hurra','Celebra','Saluda','Honra','Aplaude','Respeto','Sigue brillando','Muchas felicidades','Bien hecho','Poder histórico','Gran celebración']
+  }
+};
+
+let currentLang = 'en';
+let currentStoryEnglish = '';
+
+/* Put all figure image URLs here */
+const WGLT_IMAGES = {
+  /* INVENTORS */
+  "fmj": "https://static.wixstatic.com/media/80a41b_168584c8563a45ff89b06483bf6c9f04~mv2.jpg",
+  "carver": "https://static.wixstatic.com/media/80a41b_0b4ada0c85d34b258405a18f8aefbec8~mv2.jpg",
+  "drew": "https://static.wixstatic.com/media/80a41b_678e33db1d484e98879c19f267fdadee~mv2.jpg",
+  "mccoy": "https://static.wixstatic.com/media/80a41b_6f0e42f8efbb450183e9919293e87888~mv2.jpg",
+  "morgan": "https://static.wixstatic.com/media/80a41b_080e33b342f847e792f17f6c841c215f~mv2.jpg",
+  "gelobter": "https://static.wixstatic.com/media/80a41b_cdcd6802c1844dcdbb061640d49539c4~mv2.jpg",
+  "walker": "https://static.wixstatic.com/media/80a41b_9408e844723b4b87be59f2c375446f5b~mv2.jpg",
+  "brown": "https://static.wixstatic.com/media/80a41b_b8374d72eb6c4a1dbdad1d4c1e0242d9~mv2.jpg",
+  "bath": "https://static.wixstatic.com/media/80a41b_6f70a478721d4b8db1233da0a394dcb0~mv2.jpg",
+  "joyner": "https://static.wixstatic.com/media/80a41b_10e87239b4284baab7ac118b19293a11~mv2.jpg",
+
+  /* PUBLIC ACTIVISTS */
+  "mlk": "https://static.wixstatic.com/media/80a41b_f54d5a8c6e0e4b2a8472563fd1b229d6~mv2.jpg",
+  "parks": "https://static.wixstatic.com/media/80a41b_18dda8afc00446ceb53bee59637a6093~mv2.jpg",
+  "tubman": "https://static.wixstatic.com/media/80a41b_4e4d8cd97657435aa04bd85644bf14c6~mv2.jpg",
+  "obama": "https://static.wixstatic.com/media/80a41b_b27787d84a2a4c6d827e886fbe60f61c~mv2.jpg",
+  "baker": "https://static.wixstatic.com/media/80a41b_d2da70402ef044a8be8c19f07804176c~mv2.jpg",
+  "jackson": "https://static.wixstatic.com/media/80a41b_8420ff70f745454fa20b39fb3e359c08~mv2.jpg",
+  "marshall": "https://static.wixstatic.com/media/80a41b_d9bf94482fcb4fafb31ec529a3bf05b5~mv2.jpg",
+  "michelle-obama": "https://static.wixstatic.com/media/80a41b_ddd1101634dd44df83eddfc39f4e9b50~mv2.jpg",
+  "malcolm-x": "https://static.wixstatic.com/media/80a41b_fbd7c59821704698ab0c24b915d8647f~mv2.jpg",
+  "hamer": "https://static.wixstatic.com/media/80a41b_5820d479c4734e289a53c126efa93abc~mv2.jpg",
+
+  /* ENTERTAINERS */
+  "chadwick-boseman": "https://static.wixstatic.com/media/80a41b_a4df7ea9dce448c696b4080a8182151e~mv2.jpg",
+  "cicely-tyson": "https://static.wixstatic.com/media/80a41b_fedce01597f94e4f8806f48b7880529f~mv2.jpg",
+  "denzel-washington": "https://static.wixstatic.com/media/80a41b_34994c5ac545481faac1458d957467df~mv2.jpg",
+  "lena-horne": "https://static.wixstatic.com/media/80a41b_747165a362444f659a24b1417a36f8d2~mv2.jpg",
+  "sidney-poitier": "https://static.wixstatic.com/media/80a41b_297d7d53ef9743c6b9d561c7d643c4b2~mv2.jpg",
+  "viola-davis": "https://static.wixstatic.com/media/80a41b_532be0655b544ed58eec3a5d9531a294~mv2.jpg",
+  "zendaya": "https://static.wixstatic.com/media/80a41b_13b1a4a368c24784a2e603d9b73453d7~mv2.jpg",
+  "levar-burton": "https://static.wixstatic.com/media/80a41b_6aa502c2409e4753b806718f0e5eb36e~mv2.jpg",
+  "tyler-perry": "https://static.wixstatic.com/media/80a41b_4dcedc54efb5487d940115923cf4e9c7~mv2.jpg",
+  "angela-bassett": "https://static.wixstatic.com/media/80a41b_72174107662e42c88fd63e0f7f17384f~mv2.jpg",
+
+  /* MILITARY */
+  "benjamin-davis-jr": "https://static.wixstatic.com/media/80a41b_7279028cd3cc42a7bf16a409873a2640~mv2.jpg",
+  "charles-mcgee": "https://static.wixstatic.com/media/80a41b_b1f1bdbbd7684581903e60828fff7365~mv2.jpg",
+  "colin-powell": "https://static.wixstatic.com/media/80a41b_ed6dbc5d82fa42b68831582a4b53dd5c~mv2.jpg",
+  "robert-smalls": "https://static.wixstatic.com/media/80a41b_cfc215e28e0040c297b8a4a001f94a96~mv2.jpg",
+  "doris-miller": "https://static.wixstatic.com/media/80a41b_0ace45532b4d413cbea3bebbb10cb2eb~mv2.jpg",
+  "cathay-williams": "https://static.wixstatic.com/media/80a41b_50ef693483d8466492333eae1bf5609b~mv2.jpg",
+  "harriet-waddy": "https://static.wixstatic.com/media/80a41b_96ad37e66c044df7b389b09e8e86a799~mv2.jpg",
+  "josephine-baker": "https://static.wixstatic.com/media/80a41b_c41adf1c6c3c4df3af43306903d670ed~mv2.jpg",
+  "lorna-mahlock": "https://static.wixstatic.com/media/80a41b_4e4a03df26464f17af718da626ddb3a7~mv2.jpg",
+  "marcelite-harris": "https://static.wixstatic.com/media/80a41b_4be7009cde5546d48c0bfa38632520c8~mv2.jpg",
+
+  /* COMEDIANS */
+  "bernie-mac": "https://static.wixstatic.com/media/80a41b_2741975d88fd460f9fb85b527c39940d~mv2.jpg",
+  "chappelle": "https://static.wixstatic.com/media/80a41b_d921222dced14c6a8eafe67baf71f80e~mv2.jpg",
+  "eddie-murphy": "https://static.wixstatic.com/media/80a41b_1b1b873524dc430dad10a4dc6c6c37c8~mv2.jpg",
+  "kevin-hart": "https://static.wixstatic.com/media/80a41b_ea7fbf5885134b4f9d06d89e4ae4cb01~mv2.jpg",
+  "richard-pryor": "https://static.wixstatic.com/media/80a41b_5b09de6078a54afa8a7510e45a929ecd~mv2.jpg",
+  "whoopi-goldberg": "https://static.wixstatic.com/media/80a41b_41df52c8c25c4d45ae55633c282a8fa4~mv2.jpg",
+  "wanda-sykes": "https://static.wixstatic.com/media/80a41b_2559a864fac14f42aa7e88be92a6ca80~mv2.jpg",
+  "tiffany-haddish": "https://static.wixstatic.com/media/80a41b_a9fa5d271258472e814bbd3d20b9ffba~mv2.jpg",
+  "monique": "https://static.wixstatic.com/media/80a41b_b98d0c60676d4759a13746bb51d0534c~mv2.jpg",
+  "moms-mabley": "https://static.wixstatic.com/media/80a41b_7d995e69201642f68a1342de2dd2f71b~mv2.jpg",
+
+  /* MUSICIANS */
+  "aretha-franklin": "https://static.wixstatic.com/media/80a41b_9fbfb23d33ca424497c62285c45b0afe~mv2.jpg",
+  "beyonce": "https://static.wixstatic.com/media/80a41b_e39f6292936047edbcfba55558e1d4d8~mv2.jpg",
+  "hazel-scott": "https://static.wixstatic.com/media/80a41b_5ae3ac850d5e43658b03b88da6becb73~mv2.jpg",
+  "nina-simone": "https://static.wixstatic.com/media/80a41b_1015044fc893449f9e304f1a8241c4d4~mv2.jpg",
+  "rihanna": "https://static.wixstatic.com/media/80a41b_02bdab1b00534e338354df6661655b7e~mv2.jpg",
+  "michael-jackson": "https://static.wixstatic.com/media/80a41b_47ced7c213ec401bb4d8a9107f3874b6~mv2.jpg",
+  "ice-cube": "https://static.wixstatic.com/media/80a41b_a924c5ccd65b41199ee83bad33c75058~mv2.jpg",
+  "miles-davis": "https://static.wixstatic.com/media/80a41b_422d69f21e284528a535b555c4b459be~mv2.jpg",
+  "jay-z": "https://static.wixstatic.com/media/80a41b_40129910a0b446a5bd259cb0055f2b0f~mv2.jpg",
+  "will-smith": "https://static.wixstatic.com/media/80a41b_73b26cab4b174031bd0f7805745fcf35~mv2.jpg",
+
+  /* PROFESSIONS */
+  "carter-woodson": "https://static.wixstatic.com/media/80a41b_ca143f89ebdd4e88b58d3cb9dc27963f~mv2.jpg",
+  "benjamin-banneker": "https://static.wixstatic.com/media/80a41b_3efcfdbeedcc4afea7150d9a838d9677~mv2.jpg",
+  "donald-glover": "https://static.wixstatic.com/media/80a41b_127b295725724e1f9db513af491f822e~mv2.jpg",
+  "stephen-a-smith": "https://static.wixstatic.com/media/80a41b_e27dbcdb9d11475ab65b6d7b9ddd3464~mv2.jpg",
+  "web-du-bois": "https://static.wixstatic.com/media/80a41b_7811b6e153e14d02809675cc1ec35c14~mv2.jpg",
+  "robin-roberts": "https://static.wixstatic.com/media/80a41b_3d74962a8984409b9c1d01620bd125af~mv2.jpg",
+  "mary-mcleod-bethune": "https://static.wixstatic.com/media/80a41b_112b5e14ea6b4f1b8324b40770638d5a~mv2.jpg",
+  "mae-jemison": "https://static.wixstatic.com/media/80a41b_0b24324e7b494c2198282b97e4bd1c57~mv2.jpg",
+  "ketanji-brown-jackson": "https://static.wixstatic.com/media/80a41b_4d4753be5d7c48abb5d042405cd01b11~mv2.jpg",
+  "ida-b-wells": "https://static.wixstatic.com/media/80a41b_ea1f1734a6ac4c4db1cb3174df27b844~mv2.jpg",
+
+  /* SPORTS */
+  "arthur-ashe": "https://static.wixstatic.com/media/80a41b_badc5e39df304fd59f3cbe47ad053643~mv2.jpg",
+  "muhammad-ali": "https://static.wixstatic.com/media/80a41b_a26f6f6e3d1b45b6a3940bd3e89f59a5~mv2.jpg",
+  "tiger-woods": "https://static.wixstatic.com/media/80a41b_af520eab9ae34efb84dcb4c8476369c2~mv2.jpg",
+  "jackie-robinson": "https://static.wixstatic.com/media/80a41b_0593f414ee314d4ea783c4aa13578c2a~mv2.jpg",
+  "lebron-james": "https://static.wixstatic.com/media/80a41b_c8e71bfcd9cc4bd3844ab1abece48934~mv2.jpg",
+  "serena-williams": "https://static.wixstatic.com/media/80a41b_af8fe024d8f946fbb95b44c3c75294f3~mv2.jpg",
+  "wilma-rudolph": "https://static.wixstatic.com/media/80a41b_65684cebf3ed4ff78023a12090187a12~mv2.jpg",
+  "candace-parker": "https://static.wixstatic.com/media/80a41b_f81e15404380407e99cab6165805fe6d~mv2.jpg",
+  "simone-biles": "https://static.wixstatic.com/media/80a41b_05f33675d42c4d97be5dd8b54b381a28~mv2.jpg",
+  "bo-jackson": "https://static.wixstatic.com/media/80a41b_af6716b08f9541fca495857b5f6e2ae2~mv2.jpg",
+
+  /* THE ARTS */
+  "augusta-savage": "https://static.wixstatic.com/media/80a41b_e8241f9f8ca447fb91a127df1d2269ea~mv2.jpg",
+  "faith-ringgold": "https://static.wixstatic.com/media/80a41b_32103dc78cd5404eb2b190f3be0d93ad~mv2.jpg",
+  "june-jordan": "https://static.wixstatic.com/media/80a41b_408d6737dc29459b87ed777dd373a454~mv2.jpg",
+  "maya-angelou": "https://static.wixstatic.com/media/80a41b_defb7f5e5f1142dbbe2c29fbfbaf7ee6~mv2.jpg",
+  "phillis-wheatley": "https://static.wixstatic.com/media/80a41b_56d1051c89a548e6bf2b214df8de2888~mv2.jpg",
+  "michael-s-harper": "https://static.wixstatic.com/media/80a41b_48f3f1b3c2db478d8cb3df768f58f835~mv2.jpg",
+  "basquiat": "https://static.wixstatic.com/media/80a41b_e4378f7ba40e4a50bfcbc1cfa30f2063~mv2.jpg",
+  "james-baldwin": "https://static.wixstatic.com/media/80a41b_5daff7230005480db3215418b241c23a~mv2.jpg",
+  "james-weldon-johnson": "https://static.wixstatic.com/media/80a41b_a5507b656ac24e78b0bd5f6717385b99~mv2.jpg",
+  "gordon-parks": "https://static.wixstatic.com/media/80a41b_96abbbea56b54f188545916599b69234~mv2.jpg"
+};
+
+const WGLT_SUBJECT_IMAGES = {
+  "inventors": "https://static.wixstatic.com/media/80a41b_1a4847e90b1a437ab52df4d35d2d2475~mv2.jpg",
+  "public-activists": "https://static.wixstatic.com/media/80a41b_5538a262945446eaab47326dd0f5a1b5~mv2.jpg",
+  "entertainers": "https://static.wixstatic.com/media/80a41b_f738f6f9b8c54ac8ab0a266514a5f9cb~mv2.jpg",
+  "military": "https://static.wixstatic.com/media/80a41b_50269f8a77ae4faba4f44e25c4e629f4~mv2.jpg",
+  "comedians": "https://static.wixstatic.com/media/80a41b_ffd5a1fb29764c4fb575779ecab8e098~mv2.jpg",
+  "musicians": "https://static.wixstatic.com/media/80a41b_ffe6df9fab544338a97d907f046afb7d~mv2.jpg",
+  "professions": "https://static.wixstatic.com/media/80a41b_fd2b86de575648c590a881094524c6fc~mv2.jpg",
+  "sports": "https://static.wixstatic.com/media/80a41b_3c06df6062e24554bafcba5734432457~mv2.jpg",
+  "arts": "https://static.wixstatic.com/media/80a41b_d670b77f543347fd954ee60dd1863581~mv2.jpg"
+};
+
+const storyBits = {
+  intro(name, bornOn, date, place){
+    return `Hi, my name is ${wrapHistory(name)}. I was born ${bornOn ? 'on ' : ''}${wrapHistory(date)} in ${wrapHistory(place)}.`;
+  },
+  close(a1,a2,n1,n2,p,v1,v2,adv,t,c){
+    return ` In ${wrapChoice('place', p)}, my story still helps people ${wrapChoice('verb', v1)} and ${wrapChoice('verb', v2)} ${wrapChoice('adverb', adv)} with a ${wrapChoice('trait', t)} spirit. My legacy remains ${wrapChoice('adjective', a1)} and ${wrapChoice('adjective', a2)}, like a ${wrapChoice('noun', n1)} beside a ${wrapChoice('noun', n2)}. ${wrapChoice('trait', c)} for this history.`;
+  }
+};
+
+function f(id,name,short,initials,cardHint,imageKey,body){
+  return { id,name,short,initials,cardHint,imageKey,template:body };
+}
 
 const subjects = [
   {
     id:'inventors', name:'Inventors', initials:'IN', hint:'Safety, science, medicine, beauty, tech', figures:[
-      f('fmj','Frederick McKinley Jones','Inventor, engineer, problem-solver','FMJ','Cooling systems and invention',s=>`${storyBits.intro('Frederick McKinley Jones',true,'May 17, 1893','Covington, Kentucky')} I started ${wrapHistory('cleaning garages and working odd jobs')} and later served as ${wrapHistory('an electrician in the U.S. Army during World War I')}. In ${wrapHistory('1938')} I began designing ${wrapHistory('the Thermo-Control Model A automatic truck refrigeration unit')}, which helped preserve food, medicine, and blood.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('carver','George Washington Carver','Scientist, educator, agricultural innovator','GWC','Soil science, crops, inventions',s=>`${storyBits.intro('George Washington Carver',false,'around 1864','Diamond, Missouri')} I studied at ${wrapHistory('Iowa State University')} and became the ${wrapHistory('first Black student and later first Black faculty member')} there. In ${wrapHistory('1896')}, ${wrapHistory('Booker T. Washington')} invited me to lead agriculture at ${wrapHistory('Tuskegee Institute')}. I developed new uses for ${wrapHistory('peanuts, sweet potatoes, and soybeans')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('drew','Charles Drew','Doctor, scientist, blood-bank pioneer','CD','Blood preservation and medicine',s=>`${storyBits.intro('Charles Drew',true,'June 3, 1904','Washington, D.C.')} I studied at ${wrapHistory('Amherst College')} and ${wrapHistory('McGill University')}. In ${wrapHistory('1941')} I worked on a ${wrapHistory('blood bank')}, and in ${wrapHistory('1942')} I received a ${wrapHistory('patent for preserving blood')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('mccoy','Elijah J. McCoy','Mechanical engineer and inventor','EM','Lubricators and “the real McCoy”',s=>`${storyBits.intro('Elijah J. McCoy',true,'May 2, 1844','Colchester, Ontario')} In ${wrapHistory('1872')} I invented an ${wrapHistory('automatic lubricator')} for locomotives and ships. The phrase ${wrapHistory('the real McCoy')} is often linked to my invention.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('morgan','Garrett Morgan','Safety inventor and entrepreneur','GM','Smoke hood and traffic signal',s=>`${storyBits.intro('Garrett Augustus Morgan Sr.',true,'March 4, 1877','Claysville, Kentucky')} In ${wrapHistory('1914')} I patented the ${wrapHistory('smoke hood')}. In ${wrapHistory('1923')} I created an improved ${wrapHistory('traffic signal')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('gelobter','Lisa Gelobter','Technologist, leader, GIF pioneer','LG','Animation, Hulu, digital equity',s=>`${storyBits.intro('Lisa Gelobter',false,'1971','New York')} I studied computer science at ${wrapHistory('Brown University')}. At ${wrapHistory('Macromedia')} I helped create animation technology later used for the ${wrapHistory('GIF')}. I also helped launch ${wrapHistory('Hulu')} and later founded ${wrapHistory('tEQuitable')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('walker','Madam C. J. Walker','Entrepreneur and hair-care pioneer','CW','Beauty business and empowerment',s=>`${storyBits.intro('Sarah Breedlove',true,'December 23, 1867','Delta, Louisiana')} I became known as ${wrapHistory('Madam C. J. Walker')} and built a beauty business with major work in ${wrapHistory('Indianapolis')} and ${wrapHistory('Harlem')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('brown','Marie Van Brittan Brown','Inventor of home security technology','MB','Security system and home safety',s=>`${storyBits.intro('Marie Van Brittan Brown',true,'October 30, 1922','Jamaica, Queens, New York')} I created a ${wrapHistory('security system')} with ${wrapHistory('peepholes, a sliding camera, TV monitors, and microphones')}. Our patent was granted in ${wrapHistory('1969')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('bath','Patricia Bath','Doctor, inventor, ophthalmology pioneer','PB','Laserphaco and cataract treatment',s=>`${storyBits.intro('Patricia Bath',true,'November 4, 1942','Harlem, New York')} I graduated from ${wrapHistory('Howard University College of Medicine')}. In ${wrapHistory('1986')} I invented the ${wrapHistory('Laserphaco Probe')} and became the ${wrapHistory('first African American female doctor to receive a medical patent')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('joyner','Marjorie Stewart Joyner','Inventor, educator, beauty industry leader','MJ','Permanent wave machine and beauty schools',s=>`${storyBits.intro('Marjorie Stewart Joyner',true,'October 24, 1896','Monterey, Virginia')} I worked with ${wrapHistory('Madam C. J. Walker')} and in ${wrapHistory('1928')} invented the ${wrapHistory('permanent wave machine')}. I later helped found the ${wrapHistory('United Beauty School Owners and Teachers Association')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
+      f('fmj','Frederick McKinley Jones','Inventor, engineer, problem-solver','FMJ','Cooling systems and invention','fmj',s=>`${storyBits.intro('Frederick McKinley Jones',true,'May 17, 1893','Covington, Kentucky')} I started ${wrapHistory('cleaning garages and working odd jobs')} and later served as ${wrapHistory('an electrician in the U.S. Army during World War I')}. In ${wrapHistory('1938')} I began designing ${wrapHistory('the Thermo-Control Model A automatic truck refrigeration unit')}, which helped preserve food, medicine, and blood.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('carver','George Washington Carver','Scientist, educator, agricultural innovator','GWC','Soil science, crops, inventions','carver',s=>`${storyBits.intro('George Washington Carver',false,'around 1864','Diamond, Missouri')} I studied at ${wrapHistory('Iowa State University')} and became the ${wrapHistory('first Black student and later first Black faculty member')} there. In ${wrapHistory('1896')}, ${wrapHistory('Booker T. Washington')} invited me to lead agriculture at ${wrapHistory('Tuskegee Institute')}. I developed new uses for ${wrapHistory('peanuts, sweet potatoes, and soybeans')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('drew','Charles Drew','Doctor, scientist, blood-bank pioneer','CD','Blood preservation and medicine','drew',s=>`${storyBits.intro('Charles Drew',true,'June 3, 1904','Washington, D.C.')} I studied at ${wrapHistory('Amherst College')} and ${wrapHistory('McGill University')}. In ${wrapHistory('1941')} I worked on a ${wrapHistory('blood bank')}, and in ${wrapHistory('1942')} I received a ${wrapHistory('patent for preserving blood')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('mccoy','Elijah J. McCoy','Mechanical engineer and inventor','EM','Lubricators and “the real McCoy”','mccoy',s=>`${storyBits.intro('Elijah J. McCoy',true,'May 2, 1844','Colchester, Ontario')} In ${wrapHistory('1872')} I invented an ${wrapHistory('automatic lubricator')} for locomotives and ships. The phrase ${wrapHistory('the real McCoy')} is often linked to my invention.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('morgan','Garrett Morgan','Safety inventor and entrepreneur','GM','Smoke hood and traffic signal','morgan',s=>`${storyBits.intro('Garrett Augustus Morgan Sr.',true,'March 4, 1877','Claysville, Kentucky')} In ${wrapHistory('1914')} I patented the ${wrapHistory('smoke hood')}. In ${wrapHistory('1923')} I created an improved ${wrapHistory('traffic signal')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('gelobter','Lisa Gelobter','Technologist, leader, GIF pioneer','LG','Animation, Hulu, digital equity','gelobter',s=>`${storyBits.intro('Lisa Gelobter',false,'1971','New York')} I studied computer science at ${wrapHistory('Brown University')}. At ${wrapHistory('Macromedia')} I helped create animation technology later used for the ${wrapHistory('GIF')}. I also helped launch ${wrapHistory('Hulu')} and later founded ${wrapHistory('tEQuitable')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('walker','Madam C. J. Walker','Entrepreneur and hair-care pioneer','CW','Beauty business and empowerment','walker',s=>`${storyBits.intro('Sarah Breedlove',true,'December 23, 1867','Delta, Louisiana')} I became known as ${wrapHistory('Madam C. J. Walker')} and built a beauty business with major work in ${wrapHistory('Indianapolis')} and ${wrapHistory('Harlem')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('brown','Marie Van Brittan Brown','Inventor of home security technology','MB','Security system and home safety','brown',s=>`${storyBits.intro('Marie Van Brittan Brown',true,'October 30, 1922','Jamaica, Queens, New York')} I created a ${wrapHistory('security system')} with ${wrapHistory('peepholes, a sliding camera, TV monitors, and microphones')}. Our patent was granted in ${wrapHistory('1969')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('bath','Patricia Bath','Doctor, inventor, ophthalmology pioneer','PB','Laserphaco and cataract treatment','bath',s=>`${storyBits.intro('Patricia Bath',true,'November 4, 1942','Harlem, New York')} I graduated from ${wrapHistory('Howard University College of Medicine')}. In ${wrapHistory('1986')} I invented the ${wrapHistory('Laserphaco Probe')} and became the ${wrapHistory('first African American female doctor to receive a medical patent')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('joyner','Marjorie Stewart Joyner','Inventor, educator, beauty industry leader','MJ','Permanent wave machine and beauty schools','joyner',s=>`${storyBits.intro('Marjorie Stewart Joyner',true,'October 24, 1896','Monterey, Virginia')} I worked with ${wrapHistory('Madam C. J. Walker')} and in ${wrapHistory('1928')} invented the ${wrapHistory('permanent wave machine')}. I later helped found the ${wrapHistory('United Beauty School Owners and Teachers Association')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
     ]
   },
   {
     id:'public-activists', name:'Public Activists', initials:'PA', hint:'Civil rights, leadership, justice, voting rights', figures:[
-      f('mlk','Martin Luther King Jr.','Speaker, minister, civil rights leader','MLK','Dreams, marches, leadership',s=>`${storyBits.intro('Martin Luther King Jr.',true,'January 15, 1929','Atlanta, Georgia')} I studied at ${wrapHistory('Morehouse College')}, ${wrapHistory('Crozer Theological Seminary')}, and ${wrapHistory('Boston University')}. In ${wrapHistory('1957')} I helped found the ${wrapHistory('Southern Christian Leadership Conference (SCLC)')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('parks','Rosa Parks','Civil rights activist and organizer','RP','Montgomery Bus Boycott and courage',s=>`${storyBits.intro('Rosa Parks',true,'February 4, 1913','Tuskegee, Alabama')} I joined the ${wrapHistory('Montgomery chapter of the NAACP')} and helped spark the ${wrapHistory('Montgomery Bus Boycott')} after my arrest in ${wrapHistory('1955')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('tubman','Harriet Tubman','Freedom fighter, rescuer, Union scout','HT','Underground Railroad and courage',s=>`${storyBits.intro('Araminta Ross',false,'March 1822','Dorchester County, Maryland')} I later became ${wrapHistory('Harriet Tubman')}, escaped in ${wrapHistory('1849')}, and made about ${wrapHistory('13 missions')} on the ${wrapHistory('Underground Railroad')}. I also served the ${wrapHistory('Union Army')} as a cook, nurse, scout, and spy.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('obama','Barack Obama','President, senator, public leader','BO','Illinois Senate, Harvard Law, presidency',s=>`${storyBits.intro('Barack Hussein Obama II',true,'August 4, 1961','Honolulu, Hawaii')} I studied at ${wrapHistory('Columbia University')} and ${wrapHistory('Harvard Law School')}, where I became the ${wrapHistory('first African American editor of the Harvard Law Review')}. In ${wrapHistory('2008')} I became the ${wrapHistory('first African American elected president')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('baker','Ella Baker','Organizer, strategist, movement builder','EB','NAACP, SCLC, SNCC',s=>`${storyBits.intro('Ella Josephine Baker',true,'December 13, 1903','Norfolk, Virginia')} I graduated from ${wrapHistory('Shaw University')} and later worked with the ${wrapHistory('NAACP')}, ${wrapHistory('SCLC')}, and helped organize the ${wrapHistory('Student Nonviolent Coordinating Committee (SNCC)')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('jackson','Jesse Jackson','Minister, organizer, campaign leader','JJ','SCLC, Rainbow Coalition, PUSH',s=>`${storyBits.intro('Jesse Jackson',true,'October 8, 1941','Greenville, South Carolina')} I marched in ${wrapHistory('Selma')} in ${wrapHistory('1965')} and worked with the ${wrapHistory('SCLC')}. In ${wrapHistory('1983')} I launched a presidential campaign and helped organize the ${wrapHistory('Rainbow Coalition')} and ${wrapHistory('PUSH')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('marshall','Thurgood Marshall','Lawyer, justice, civil rights trailblazer','TM','Howard Law, NAACP, Supreme Court',s=>`${storyBits.intro('Thurgood Marshall',true,'July 2, 1908','Baltimore, Maryland')} I studied at ${wrapHistory('Lincoln University')} and ${wrapHistory('Howard Law')}, joined the ${wrapHistory('NAACP')}, and in ${wrapHistory('1967')} became the ${wrapHistory('first African American Supreme Court justice')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('michelle-obama','Michelle Obama','First Lady, lawyer, public service leader','MO','Princeton, Harvard Law, First Lady',s=>`${storyBits.intro('Michelle Obama',true,'January 17, 1964','Chicago, Illinois')} I studied at ${wrapHistory('Princeton University')} and ${wrapHistory('Harvard Law School')}. From ${wrapHistory('2009 to 2017')} I served as ${wrapHistory('First Lady of the United States')} and became the ${wrapHistory('first African American woman to serve in this position')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('malcolm-x','Malcolm X','Minister, organizer, outspoken activist','MX','Nation of Islam, Detroit, Harlem',s=>`${storyBits.intro('Malcolm Little',true,'May 19, 1925','Omaha, Nebraska')} After prison, I joined the ${wrapHistory('Nation of Islam')}, worked with ${wrapHistory('Elijah Muhammad')}, and later led ${wrapHistory('Temple 7 in Harlem')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('hamer','Fannie Lou Hamer','Voting rights activist and organizer','FH','Voting rights and MFDP',s=>`${storyBits.intro('Fannie Lou Townsend',true,'October 6, 1917','Montgomery County, Mississippi')} I fought literacy-test barriers, registered to vote in ${wrapHistory('1963')}, and in ${wrapHistory('1964')} helped co-found the ${wrapHistory('Mississippi Freedom Democratic Party (MFDP)')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
+      f('mlk','Martin Luther King Jr.','Speaker, minister, civil rights leader','MLK','Dreams, marches, leadership','mlk',s=>`${storyBits.intro('Martin Luther King Jr.',true,'January 15, 1929','Atlanta, Georgia')} I studied at ${wrapHistory('Morehouse College')}, ${wrapHistory('Crozer Theological Seminary')}, and ${wrapHistory('Boston University')}. In ${wrapHistory('1957')} I helped found the ${wrapHistory('Southern Christian Leadership Conference (SCLC)')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('parks','Rosa Parks','Civil rights activist and organizer','RP','Montgomery Bus Boycott and courage','parks',s=>`${storyBits.intro('Rosa Parks',true,'February 4, 1913','Tuskegee, Alabama')} I joined the ${wrapHistory('Montgomery chapter of the NAACP')} and helped spark the ${wrapHistory('Montgomery Bus Boycott')} after my arrest in ${wrapHistory('1955')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('tubman','Harriet Tubman','Freedom fighter, rescuer, Union scout','HT','Underground Railroad and courage','tubman',s=>`${storyBits.intro('Araminta Ross',false,'March 1822','Dorchester County, Maryland')} I later became ${wrapHistory('Harriet Tubman')}, escaped in ${wrapHistory('1849')}, and made about ${wrapHistory('13 missions')} on the ${wrapHistory('Underground Railroad')}. I also served the ${wrapHistory('Union Army')} as a cook, nurse, scout, and spy.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('obama','Barack Obama','President, senator, public leader','BO','Illinois Senate, Harvard Law, presidency','obama',s=>`${storyBits.intro('Barack Hussein Obama II',true,'August 4, 1961','Honolulu, Hawaii')} I studied at ${wrapHistory('Columbia University')} and ${wrapHistory('Harvard Law School')}, where I became the ${wrapHistory('first African American editor of the Harvard Law Review')}. In ${wrapHistory('2008')} I became the ${wrapHistory('first African American elected president')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('baker','Ella Baker','Organizer, strategist, movement builder','EB','NAACP, SCLC, SNCC','baker',s=>`${storyBits.intro('Ella Josephine Baker',true,'December 13, 1903','Norfolk, Virginia')} I graduated from ${wrapHistory('Shaw University')} and later worked with the ${wrapHistory('NAACP')}, ${wrapHistory('SCLC')}, and helped organize the ${wrapHistory('Student Nonviolent Coordinating Committee (SNCC)')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('jackson','Jesse Jackson','Minister, organizer, campaign leader','JJ','SCLC, Rainbow Coalition, PUSH','jackson',s=>`${storyBits.intro('Jesse Jackson',true,'October 8, 1941','Greenville, South Carolina')} I marched in ${wrapHistory('Selma')} in ${wrapHistory('1965')} and worked with the ${wrapHistory('SCLC')}. In ${wrapHistory('1983')} I launched a presidential campaign and helped organize the ${wrapHistory('Rainbow Coalition')} and ${wrapHistory('PUSH')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('marshall','Thurgood Marshall','Lawyer, justice, civil rights trailblazer','TM','Howard Law, NAACP, Supreme Court','marshall',s=>`${storyBits.intro('Thurgood Marshall',true,'July 2, 1908','Baltimore, Maryland')} I studied at ${wrapHistory('Lincoln University')} and ${wrapHistory('Howard Law')}, joined the ${wrapHistory('NAACP')}, and in ${wrapHistory('1967')} became the ${wrapHistory('first African American Supreme Court justice')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('michelle-obama','Michelle Obama','First Lady, lawyer, public service leader','MO','Princeton, Harvard Law, First Lady','michelle-obama',s=>`${storyBits.intro('Michelle Obama',true,'January 17, 1964','Chicago, Illinois')} I studied at ${wrapHistory('Princeton University')} and ${wrapHistory('Harvard Law School')}. From ${wrapHistory('2009 to 2017')} I served as ${wrapHistory('First Lady of the United States')} and became the ${wrapHistory('first African American woman to serve in this position')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('malcolm-x','Malcolm X','Minister, organizer, outspoken activist','MX','Nation of Islam, Detroit, Harlem','malcolm-x',s=>`${storyBits.intro('Malcolm Little',true,'May 19, 1925','Omaha, Nebraska')} After prison, I joined the ${wrapHistory('Nation of Islam')}, worked with ${wrapHistory('Elijah Muhammad')}, and later led ${wrapHistory('Temple 7 in Harlem')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('hamer','Fannie Lou Hamer','Voting rights activist and organizer','FH','Voting rights and MFDP','hamer',s=>`${storyBits.intro('Fannie Lou Townsend',true,'October 6, 1917','Montgomery County, Mississippi')} I fought literacy-test barriers, registered to vote in ${wrapHistory('1963')}, and in ${wrapHistory('1964')} helped co-found the ${wrapHistory('Mississippi Freedom Democratic Party (MFDP)')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
     ]
   },
   {
     id:'entertainers', name:'Entertainers', initials:'EN', hint:'Actors, performers, and storytellers', figures:[
-      f('chadwick-boseman','Chadwick Boseman','Actor, playwright, and cultural icon','CB','Howard, Black Panther, and historic roles',s=>`${storyBits.intro('Chadwick Aaron Boseman',true,'November 29, 1976','Anderson, South Carolina')} I graduated from ${wrapHistory('Howard University')} and later played icons in ${wrapHistory('42')}, ${wrapHistory('Get on Up')}, ${wrapHistory('Marshall')}, and ${wrapHistory('Black Panther as T’Challa')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('cicely-tyson','Cicely Tyson','Trailblazing actress and screen legend','CT','Positive portrayals and Sounder',s=>`${storyBits.intro('Cicely Tyson',true,'December 19, 1924','the Bronx, New York')} I became known for positive portrayals of Black women and earned major honors for ${wrapHistory('Sounder')} in ${wrapHistory('1972')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('denzel-washington','Denzel Washington','Award-winning actor and director','DW','Glory, Training Day, and stage power',s=>`${storyBits.intro('Denzel Washington Jr.',true,'December 28, 1954','Mount Vernon, New York')} I graduated from ${wrapHistory('Fordham University')} and later won Academy Awards for ${wrapHistory('Glory')} and ${wrapHistory('Training Day')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('lena-horne','Lena Horne','Singer, actress, and trailblazer','LH','Cotton Club, MGM, and Stormy Weather',s=>`${storyBits.intro('Lena Horne',true,'June 30, 1917','Brooklyn, New York')} In ${wrapHistory('1933')} I joined the ${wrapHistory('Cotton Club')}. In ${wrapHistory('1942')} I signed with ${wrapHistory('MGM')} and became famous for ${wrapHistory('Stormy Weather')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('sidney-poitier','Sidney Poitier','Groundbreaking actor and film pioneer','SP','American Negro Theatre and Oscar first',s=>`${storyBits.intro('Sidney Poitier',true,'February 20, 1927','Miami, Florida')} I worked with the ${wrapHistory('American Negro Theatre')} and in ${wrapHistory('1964')} became the ${wrapHistory('first African American actor to win the Academy Award for Best Actor')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('viola-davis','Viola Davis','Acclaimed actress and award-winning performer','VD','Juilliard, The Help, and Emmy history',s=>`${storyBits.intro('Viola Davis',true,'August 11, 1965','Matthews, South Carolina')} I studied at ${wrapHistory('Rhode Island College')} and ${wrapHistory('The Juilliard School')}. In ${wrapHistory('2015')} I became the ${wrapHistory('first Black actress to win the Primetime Emmy Award for Outstanding Lead Actress in a Drama Series')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('zendaya','Zendaya','Actor, performer, and modern screen star','ZD','Shake It Up and feature-film breakout',s=>`${storyBits.intro('Zendaya Maree Stoermer Coleman',true,'September 1, 1996','Oakland, California')} In ${wrapHistory('2009')} I was selected to play Rocky Blue in ${wrapHistory('Shake It Up')}. In ${wrapHistory('2017')} I made my feature film debut in ${wrapHistory('Spider-Man: Homecoming')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('levar-burton','LeVar Burton','Actor, host, and literacy champion','LB','Roots, Reading Rainbow, and Star Trek',s=>`${storyBits.intro('LeVar Burton Jr.',true,'February 16, 1957','Landstuhl, West Germany')} I gained fame in ${wrapHistory('Roots')} as ${wrapHistory('Kunta Kinte')} and later hosted ${wrapHistory('Reading Rainbow')} for ${wrapHistory('23 seasons')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('tyler-perry','Tyler Perry','Playwright, filmmaker, and producer','TP','Stage plays, Madea, and TV empire',s=>`${storyBits.intro('Emmitt Perry, Jr.',true,'September 13, 1969','New Orleans, Louisiana')} Inspired by ${wrapHistory('The Oprah Winfrey Show')}, I wrote material that became ${wrapHistory('I Know I\'ve Been Changed')}. I later created ${wrapHistory('Diary of a Mad Black Woman')}, ${wrapHistory('Madea\'s Family Reunion')}, and ${wrapHistory('Tyler Perry\'s House of Payne')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('angela-bassett','Angela Bassett','Award-winning actress and powerhouse performer','AB','Malcolm X, Tina Turner, and Black Panther',s=>`${storyBits.intro('Angela Evelyn Bassett',true,'August 16, 1958','New York City, New York')} I studied at ${wrapHistory('Yale School of Drama')} and later played ${wrapHistory('Betty Shabazz in Malcolm X')} and ${wrapHistory('Tina Turner in What’s Love Got to Do with It')}. I also appeared in ${wrapHistory('Black Panther')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
+      f('chadwick-boseman','Chadwick Boseman','Actor, playwright, and cultural icon','CB','Howard, Black Panther, and historic roles','chadwick-boseman',s=>`${storyBits.intro('Chadwick Aaron Boseman',true,'November 29, 1976','Anderson, South Carolina')} I graduated from ${wrapHistory('Howard University')} and later played icons in ${wrapHistory('42')}, ${wrapHistory('Get on Up')}, ${wrapHistory('Marshall')}, and ${wrapHistory('Black Panther as T’Challa')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('cicely-tyson','Cicely Tyson','Trailblazing actress and screen legend','CT','Positive portrayals and Sounder','cicely-tyson',s=>`${storyBits.intro('Cicely Tyson',true,'December 19, 1924','the Bronx, New York')} I became known for positive portrayals of Black women and earned major honors for ${wrapHistory('Sounder')} in ${wrapHistory('1972')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('denzel-washington','Denzel Washington','Award-winning actor and director','DW','Glory, Training Day, and stage power','denzel-washington',s=>`${storyBits.intro('Denzel Washington Jr.',true,'December 28, 1954','Mount Vernon, New York')} I graduated from ${wrapHistory('Fordham University')} and later won Academy Awards for ${wrapHistory('Glory')} and ${wrapHistory('Training Day')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('lena-horne','Lena Horne','Singer, actress, and trailblazer','LH','Cotton Club, MGM, and Stormy Weather','lena-horne',s=>`${storyBits.intro('Lena Horne',true,'June 30, 1917','Brooklyn, New York')} In ${wrapHistory('1933')} I joined the ${wrapHistory('Cotton Club')}. In ${wrapHistory('1942')} I signed with ${wrapHistory('MGM')} and became famous for ${wrapHistory('Stormy Weather')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('sidney-poitier','Sidney Poitier','Groundbreaking actor and film pioneer','SP','American Negro Theatre and Oscar first','sidney-poitier',s=>`${storyBits.intro('Sidney Poitier',true,'February 20, 1927','Miami, Florida')} I worked with the ${wrapHistory('American Negro Theatre')} and in ${wrapHistory('1964')} became the ${wrapHistory('first African American actor to win the Academy Award for Best Actor')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('viola-davis','Viola Davis','Acclaimed actress and award-winning performer','VD','Juilliard, The Help, and Emmy history','viola-davis',s=>`${storyBits.intro('Viola Davis',true,'August 11, 1965','Matthews, South Carolina')} I studied at ${wrapHistory('Rhode Island College')} and ${wrapHistory('The Juilliard School')}. In ${wrapHistory('2015')} I became the ${wrapHistory('first Black actress to win the Primetime Emmy Award for Outstanding Lead Actress in a Drama Series')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('zendaya','Zendaya','Actor, performer, and modern screen star','ZD','Shake It Up and feature-film breakout','zendaya',s=>`${storyBits.intro('Zendaya Maree Stoermer Coleman',true,'September 1, 1996','Oakland, California')} In ${wrapHistory('2009')} I was selected to play Rocky Blue in ${wrapHistory('Shake It Up')}. In ${wrapHistory('2017')} I made my feature film debut in ${wrapHistory('Spider-Man: Homecoming')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('levar-burton','LeVar Burton','Actor, host, and literacy champion','LB','Roots, Reading Rainbow, and Star Trek','levar-burton',s=>`${storyBits.intro('LeVar Burton Jr.',true,'February 16, 1957','Landstuhl, West Germany')} I gained fame in ${wrapHistory('Roots')} as ${wrapHistory('Kunta Kinte')} and later hosted ${wrapHistory('Reading Rainbow')} for ${wrapHistory('23 seasons')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('tyler-perry','Tyler Perry','Playwright, filmmaker, and producer','TP','Stage plays, Madea, and TV empire','tyler-perry',s=>`${storyBits.intro('Emmitt Perry, Jr.',true,'September 13, 1969','New Orleans, Louisiana')} Inspired by ${wrapHistory('The Oprah Winfrey Show')}, I wrote material that became ${wrapHistory('I Know I\'ve Been Changed')}. I later created ${wrapHistory('Diary of a Mad Black Woman')}, ${wrapHistory('Madea\'s Family Reunion')}, and ${wrapHistory('Tyler Perry\'s House of Payne')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('angela-bassett','Angela Bassett','Award-winning actress and powerhouse performer','AB','Malcolm X, Tina Turner, and Black Panther','angela-bassett',s=>`${storyBits.intro('Angela Evelyn Bassett',true,'August 16, 1958','New York City, New York')} I studied at ${wrapHistory('Yale School of Drama')} and later played ${wrapHistory('Betty Shabazz in Malcolm X')} and ${wrapHistory('Tina Turner in What’s Love Got to Do with It')}. I also appeared in ${wrapHistory('Black Panther')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
     ]
   },
   {
     id:'military', name:'Military', initials:'MI', hint:'Service, leadership, aviation, and courage', figures:[
-      f('benjamin-davis-jr','Benjamin O. Davis Jr.','Tuskegee Airman and Air Force trailblazer','BD','West Point, Tuskegee, and USAF firsts',s=>`${storyBits.intro('Benjamin Oliver Davis Jr.',true,'December 18, 1912','Washington, D.C.')} I graduated from ${wrapHistory('the United States Military Academy')} in ${wrapHistory('1936')}. In ${wrapHistory('1942')} I earned my wings at ${wrapHistory('Tuskegee Army Air Base')} and later became the ${wrapHistory('first African American brigadier general in the United States Air Force')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('charles-mcgee','Charles McGee','Tuskegee Airman and combat pilot','CM','Italy, fighter missions, and Alpha Phi Alpha',s=>`${storyBits.intro('Charles McGee',true,'December 7, 1919','Cleveland, Ohio')} I joined the ${wrapHistory('Tuskegee Airmen')} after training in ${wrapHistory('1943')} and flew ${wrapHistory('137 combat missions')} by the end of ${wrapHistory('1944')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('colin-powell','Colin Powell','Army officer, four-star general, and statesman','CP','ROTC, Vietnam, and Secretary of State',s=>`${storyBits.intro('Colin Powell',true,'April 5, 1937','Harlem, New York')} I joined ${wrapHistory('ROTC')} at the ${wrapHistory('City College of New York')}, served ${wrapHistory('two tours in Vietnam')}, rose to ${wrapHistory('four-star general')}, and in ${wrapHistory('2001')} became the ${wrapHistory('first African American Secretary of State')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('robert-smalls','Robert Smalls','Civil War hero and ship captain','RS','CSS Planter and daring escape',s=>`${storyBits.intro('Robert Smalls',true,'April 5, 1839','Beaufort, South Carolina')} During the ${wrapHistory('Civil War')}, I steered the Confederate ${wrapHistory('CSS Planter')} to the ${wrapHistory('Union Navy fleet')} in ${wrapHistory('1862')} and later became a ${wrapHistory('captain')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('doris-miller','Doris Miller','Navy hero at Pearl Harbor','DM','USS West Virginia and Navy Cross',s=>`${storyBits.intro('Doris Miller',true,'October 12, 1919','Waco, Texas')} I served on the ${wrapHistory('USS West Virginia')}. On ${wrapHistory('December 7, 1941')}, during the attack on ${wrapHistory('Pearl Harbor')}, I helped wounded sailors and manned an anti-aircraft gun. I became the ${wrapHistory('first Black American awarded the Navy Cross')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('cathay-williams','Cathay Williams','First documented Black woman in the U.S. Army','CW','William Cathay and Army service',s=>`${storyBits.intro('Cathay Williams',false,'September 1844','Independence, Missouri')} In ${wrapHistory('1866')} I enlisted under the name ${wrapHistory('William Cathay')}. I became the ${wrapHistory('first Black woman to enlist and the only documented woman to serve in the U.S. Army during the American Indian Wars')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('harriet-waddy','Harriet Waddy','WAC leader and advocate for Black women in uniform','HW','WAC, radio appeal, and lieutenant colonel',s=>`${storyBits.intro('Harriet West Waddy',true,'June 4, 1904','Jefferson City, Missouri')} I joined the ${wrapHistory('Women’s Army Corps (WAC)')} in ${wrapHistory('1942')} and by ${wrapHistory('1948')} became a ${wrapHistory('lieutenant colonel')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('josephine-baker','Josephine Baker','Performer, spy, and wartime lieutenant','JB','France, intelligence work, and honors',s=>`${storyBits.intro('Freda Josephine McDonald',true,'June 3, 1906','St. Louis, Missouri')} During ${wrapHistory('World War II')} I worked as a ${wrapHistory('spy for the French')} and served with the ${wrapHistory('Free French Forces Air Force')} as a ${wrapHistory('second lieutenant')}. I later received the ${wrapHistory('Croix de Guerre')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('lorna-mahlock','Lorna M. Mahlock','Marine Corps general and information leader','LM','USMC brigadier general milestone',s=>`${storyBits.intro('Lorna M. Mahlock',false,'1968','Kingston, Jamaica')} I enlisted in the ${wrapHistory('United States Marine Corps')} and in ${wrapHistory('2018')} became the ${wrapHistory('first Black woman nominated for promotion to brigadier general in the Marine Corps')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('marcelite-harris','Marcelite J. Harris','Air Force major general and maintenance pioneer','MH','Spelman, WAF, and Air Force firsts',s=>`${storyBits.intro('Marcelite J. Harris',true,'January 16, 1943','Houston, Texas')} I graduated from ${wrapHistory('Spelman College')} and joined the ${wrapHistory('Women in the Air Force program')}. I became the ${wrapHistory('first female aircraft maintenance officer')} and in ${wrapHistory('1991')} the ${wrapHistory('first African-American female general officer of the United States Air Force')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
+      f('benjamin-davis-jr','Benjamin O. Davis Jr.','Tuskegee Airman and Air Force trailblazer','BD','West Point, Tuskegee, and USAF firsts','benjamin-davis-jr',s=>`${storyBits.intro('Benjamin Oliver Davis Jr.',true,'December 18, 1912','Washington, D.C.')} I graduated from ${wrapHistory('the United States Military Academy')} in ${wrapHistory('1936')}. In ${wrapHistory('1942')} I earned my wings at ${wrapHistory('Tuskegee Army Air Base')} and later became the ${wrapHistory('first African American brigadier general in the United States Air Force')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('charles-mcgee','Charles McGee','Tuskegee Airman and combat pilot','CM','Italy, fighter missions, and Alpha Phi Alpha','charles-mcgee',s=>`${storyBits.intro('Charles McGee',true,'December 7, 1919','Cleveland, Ohio')} I joined the ${wrapHistory('Tuskegee Airmen')} after training in ${wrapHistory('1943')} and flew ${wrapHistory('137 combat missions')} by the end of ${wrapHistory('1944')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('colin-powell','Colin Powell','Army officer, four-star general, and statesman','CP','ROTC, Vietnam, and Secretary of State','colin-powell',s=>`${storyBits.intro('Colin Powell',true,'April 5, 1937','Harlem, New York')} I joined ${wrapHistory('ROTC')} at the ${wrapHistory('City College of New York')}, served ${wrapHistory('two tours in Vietnam')}, rose to ${wrapHistory('four-star general')}, and in ${wrapHistory('2001')} became the ${wrapHistory('first African American Secretary of State')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('robert-smalls','Robert Smalls','Civil War hero and ship captain','RS','CSS Planter and daring escape','robert-smalls',s=>`${storyBits.intro('Robert Smalls',true,'April 5, 1839','Beaufort, South Carolina')} During the ${wrapHistory('Civil War')}, I steered the Confederate ${wrapHistory('CSS Planter')} to the ${wrapHistory('Union Navy fleet')} in ${wrapHistory('1862')} and later became a ${wrapHistory('captain')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('doris-miller','Doris Miller','Navy hero at Pearl Harbor','DM','USS West Virginia and Navy Cross','doris-miller',s=>`${storyBits.intro('Doris Miller',true,'October 12, 1919','Waco, Texas')} I served on the ${wrapHistory('USS West Virginia')}. On ${wrapHistory('December 7, 1941')}, during the attack on ${wrapHistory('Pearl Harbor')}, I helped wounded sailors and manned an anti-aircraft gun. I became the ${wrapHistory('first Black American awarded the Navy Cross')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('cathay-williams','Cathay Williams','First documented Black woman in the U.S. Army','CW','William Cathay and Army service','cathay-williams',s=>`${storyBits.intro('Cathay Williams',false,'September 1844','Independence, Missouri')} In ${wrapHistory('1866')} I enlisted under the name ${wrapHistory('William Cathay')}. I became the ${wrapHistory('first Black woman to enlist and the only documented woman to serve in the U.S. Army during the American Indian Wars')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('harriet-waddy','Harriet Waddy','WAC leader and advocate for Black women in uniform','HW','WAC, radio appeal, and lieutenant colonel','harriet-waddy',s=>`${storyBits.intro('Harriet West Waddy',true,'June 4, 1904','Jefferson City, Missouri')} I joined the ${wrapHistory('Women’s Army Corps (WAC)')} in ${wrapHistory('1942')} and by ${wrapHistory('1948')} became a ${wrapHistory('lieutenant colonel')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('josephine-baker','Josephine Baker','Performer, spy, and wartime lieutenant','JB','France, intelligence work, and honors','josephine-baker',s=>`${storyBits.intro('Freda Josephine McDonald',true,'June 3, 1906','St. Louis, Missouri')} During ${wrapHistory('World War II')} I worked as a ${wrapHistory('spy for the French')} and served with the ${wrapHistory('Free French Forces Air Force')} as a ${wrapHistory('second lieutenant')}. I later received the ${wrapHistory('Croix de Guerre')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('lorna-mahlock','Lorna M. Mahlock','Marine Corps general and information leader','LM','USMC brigadier general milestone','lorna-mahlock',s=>`${storyBits.intro('Lorna M. Mahlock',false,'1968','Kingston, Jamaica')} I enlisted in the ${wrapHistory('United States Marine Corps')} and in ${wrapHistory('2018')} became the ${wrapHistory('first Black woman nominated for promotion to brigadier general in the Marine Corps')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('marcelite-harris','Marcelite J. Harris','Air Force major general and maintenance pioneer','MH','Spelman, WAF, and Air Force firsts','marcelite-harris',s=>`${storyBits.intro('Marcelite J. Harris',true,'January 16, 1943','Houston, Texas')} I graduated from ${wrapHistory('Spelman College')} and joined the ${wrapHistory('Women in the Air Force program')}. I became the ${wrapHistory('first female aircraft maintenance officer')} and in ${wrapHistory('1991')} the ${wrapHistory('first African-American female general officer of the United States Air Force')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
     ]
   },
   {
     id:'comedians', name:'Comedians', initials:'CM', hint:'Stand-up, TV, film, laughter', figures:[
-      f('bernie-mac','Bernard McCullough','Stand-up comic and sitcom star','BM','Def Comedy Jam and The Bernie Mac Show',s=>`${storyBits.intro('Bernard Jeffrey McCullough',true,'October 5, 1957','Chicago, Illinois')} My performance on ${wrapHistory('HBO’s Def Comedy Jam')} gave me a major mainstream boost, and in ${wrapHistory('2001')} I starred in ${wrapHistory('The Bernie Mac Show')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('chappelle','Dave Chappelle','Stand-up and sketch comedy star','DC','Def Comedy Jam and Chappelle’s Show',s=>`${storyBits.intro('David Khari Webber Chappelle',true,'August 24, 1973','Washington, D.C.')} I appeared on ${wrapHistory('Def Comedy Jam')} and in ${wrapHistory('2003')} launched ${wrapHistory('Chappelle’s Show')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('eddie-murphy','Eddie Murphy','Comedian, actor, and SNL breakout','EM','SNL and major comedy films',s=>`${storyBits.intro('Edward Regan Murphy',true,'April 3, 1961','Brooklyn, New York')} At ${wrapHistory('age 19')} I joined ${wrapHistory('Saturday Night Live')}. I later starred in ${wrapHistory('48 Hrs.')}, ${wrapHistory('Trading Places')}, and ${wrapHistory('Coming to America')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('kevin-hart','Kevin Hart','Stand-up superstar and actor','KH','The Laff House and comedy specials',s=>`${storyBits.intro('Kevin Hart',true,'July 6, 1979','Philadelphia, Pennsylvania')} I started stand-up at ${wrapHistory('The Laff House')} and later founded ${wrapHistory('HartBeat Productions')} in ${wrapHistory('2009')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('richard-pryor','Richard Pryor','Stand-up pioneer and film star','RP','Blazing Saddles and comedy history',s=>`${storyBits.intro('Richard Franklin Lennox Thomas Pryor Sr.',true,'December 1, 1940','Peoria, Illinois')} In ${wrapHistory('1974')} I co-wrote ${wrapHistory('Blazing Saddles')}, and in ${wrapHistory('1998')} I won the first ${wrapHistory('Mark Twain Prize for American Humor')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('whoopi-goldberg','Whoopi Goldberg','Comic actor and EGOT legend','WG','Ghost, EGOT, Academy Awards host',s=>`${storyBits.intro('Caryn Elaine Johnson',true,'November 13, 1955','Manhattan, New York')} In ${wrapHistory('1990')} I became the ${wrapHistory('second Black woman to win an Academy Award for acting')} for ${wrapHistory('Ghost')}. I later achieved ${wrapHistory('EGOT status')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('wanda-sykes','Wanda Sykes','Comic, writer, and performer','WS','Hampton, Def Comedy Jam, Chris Rock',s=>`${storyBits.intro('Wanda Yvette Sykes',true,'March 7, 1964','Portsmouth, Virginia')} I graduated from ${wrapHistory('Hampton University')}, appeared on ${wrapHistory('Def Comedy Jam')}, and joined the writing team for ${wrapHistory('The Chris Rock Show')} in ${wrapHistory('1997')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('tiffany-haddish','Tiffany Haddish','Comic and actress','TH','Who’s Got Jokes and Girls Trip',s=>`${storyBits.intro('Tiffany Sara Cornilia Haddish',true,'December 3, 1979','South Central Los Angeles, California')} In ${wrapHistory('2005')} I made my TV debut on ${wrapHistory('That’s So Raven')}, and in ${wrapHistory('2006')} I got my comedy break on ${wrapHistory('Bill Bellamy’s Who’s Got Jokes')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('monique','Mo\'Nique','Comic, sitcom star, and Oscar winner','MQ','The Parkers and Precious',s=>`${storyBits.intro('Monique Angela Hicks',true,'December 11, 1967','Woodlawn, Baltimore County, Maryland')} I became well known from ${wrapHistory('The Parkers')} and won the ${wrapHistory('Academy Award for Best Supporting Actress')} for ${wrapHistory('Precious')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('moms-mabley','Jackie "Moms" Mabley','Pioneer of stand-up comedy','MM','Chitlin’ Circuit and Carnegie Hall',s=>`${storyBits.intro('Loretta Mary Aiken',true,'March 19, 1894','Brevard, North Carolina')} I later became known as ${wrapHistory('Jackie “Moms” Mabley')}. I became a star on the ${wrapHistory('Chitlin’ Circuit')} and in ${wrapHistory('1962')} performed at ${wrapHistory('Carnegie Hall')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
+      f('bernie-mac','Bernard McCullough','Stand-up comic and sitcom star','BM','Def Comedy Jam and The Bernie Mac Show','bernie-mac',s=>`${storyBits.intro('Bernard Jeffrey McCullough',true,'October 5, 1957','Chicago, Illinois')} My performance on ${wrapHistory('HBO’s Def Comedy Jam')} gave me a mainstream boost, and in ${wrapHistory('2001')} I starred in ${wrapHistory('The Bernie Mac Show')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('chappelle','Dave Chappelle','Stand-up and sketch comedy star','DC','Def Comedy Jam and Chappelle’s Show','chappelle',s=>`${storyBits.intro('David Khari Webber Chappelle',true,'August 24, 1973','Washington, D.C.')} I appeared on ${wrapHistory('Def Comedy Jam')} and in ${wrapHistory('2003')} launched ${wrapHistory('Chappelle’s Show')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('eddie-murphy','Eddie Murphy','Comedian, actor, and SNL breakout','EM','SNL and major comedy films','eddie-murphy',s=>`${storyBits.intro('Edward Regan Murphy',true,'April 3, 1961','Brooklyn, New York')} At ${wrapHistory('age 19')} I joined ${wrapHistory('Saturday Night Live')}. I later starred in ${wrapHistory('48 Hrs.')}, ${wrapHistory('Trading Places')}, and ${wrapHistory('Coming to America')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('kevin-hart','Kevin Hart','Stand-up superstar and actor','KH','The Laff House and comedy specials','kevin-hart',s=>`${storyBits.intro('Kevin Hart',true,'July 6, 1979','Philadelphia, Pennsylvania')} I started stand-up at ${wrapHistory('The Laff House')} and later founded ${wrapHistory('HartBeat Productions')} in ${wrapHistory('2009')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('richard-pryor','Richard Pryor','Stand-up pioneer and film star','RP','Blazing Saddles and comedy history','richard-pryor',s=>`${storyBits.intro('Richard Franklin Lennox Thomas Pryor Sr.',true,'December 1, 1940','Peoria, Illinois')} In ${wrapHistory('1974')} I co-wrote ${wrapHistory('Blazing Saddles')}, and in ${wrapHistory('1998')} I won the first ${wrapHistory('Mark Twain Prize for American Humor')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('whoopi-goldberg','Whoopi Goldberg','Comic actor and EGOT legend','WG','Ghost, EGOT, Academy Awards host','whoopi-goldberg',s=>`${storyBits.intro('Caryn Elaine Johnson',true,'November 13, 1955','Manhattan, New York')} In ${wrapHistory('1990')} I became the ${wrapHistory('second Black woman to win an Academy Award for acting')} for ${wrapHistory('Ghost')}. I later achieved ${wrapHistory('EGOT status')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('wanda-sykes','Wanda Sykes','Comic, writer, and performer','WS','Hampton, Def Comedy Jam, Chris Rock','wanda-sykes',s=>`${storyBits.intro('Wanda Yvette Sykes',true,'March 7, 1964','Portsmouth, Virginia')} I graduated from ${wrapHistory('Hampton University')}, appeared on ${wrapHistory('Def Comedy Jam')}, and joined the writing team for ${wrapHistory('The Chris Rock Show')} in ${wrapHistory('1997')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('tiffany-haddish','Tiffany Haddish','Comic and actress','TH','Who’s Got Jokes and Girls Trip','tiffany-haddish',s=>`${storyBits.intro('Tiffany Sara Cornilia Haddish',true,'December 3, 1979','South Central Los Angeles, California')} In ${wrapHistory('2005')} I made my TV debut on ${wrapHistory('That’s So Raven')}, and in ${wrapHistory('2006')} I got my comedy break on ${wrapHistory('Bill Bellamy’s Who’s Got Jokes')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('monique','Mo\'Nique','Comic, sitcom star, and Oscar winner','MQ','The Parkers and Precious','monique',s=>`${storyBits.intro('Monique Angela Hicks',true,'December 11, 1967','Woodlawn, Baltimore County, Maryland')} I became well known from ${wrapHistory('The Parkers')} and won the ${wrapHistory('Academy Award for Best Supporting Actress')} for ${wrapHistory('Precious')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('moms-mabley','Jackie "Moms" Mabley','Pioneer of stand-up comedy','MM','Chitlin’ Circuit and Carnegie Hall','moms-mabley',s=>`${storyBits.intro('Loretta Mary Aiken',true,'March 19, 1894','Brevard, North Carolina')} I later became known as ${wrapHistory('Jackie “Moms” Mabley')}. I became a star on the ${wrapHistory('Chitlin’ Circuit')} and in ${wrapHistory('1962')} performed at ${wrapHistory('Carnegie Hall')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
     ]
   },
   {
     id:'musicians', name:'Musicians', initials:'MU', hint:'Soul, jazz, pop, rap, and musical pioneers', figures:[
-      f('aretha-franklin','Aretha Franklin','Queen of Soul and music legend','AF','Respect, Atlantic Records, and Hall of Fame',s=>`${storyBits.intro('Aretha Franklin',true,'March 25, 1942','Memphis, Tennessee')} I recorded my first music as a teen, later joined ${wrapHistory('Atlantic Records')}, and songs like ${wrapHistory('Respect')} made me the ${wrapHistory('Queen of Soul')}. I also became the ${wrapHistory('first female performer inducted into the Rock and Roll Hall of Fame')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('beyonce','Beyoncé Knowles','Singer, performer, and global superstar','BK','Girl’s Tyme, Destiny’s Child, solo albums',s=>`${storyBits.intro('Beyoncé Knowles',true,'September 4, 1981','Houston, Texas')} I started in ${wrapHistory("Girl's Tyme")}, and the group became ${wrapHistory('Destiny’s Child')}. In ${wrapHistory('2003')} I released ${wrapHistory('Dangerously in Love')} and later became the ${wrapHistory('first solo artist to have my first six studio albums debut at number one on the Billboard 200')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('hazel-scott','Hazel Scott','Pianist, singer, and TV pioneer','HS','Juilliard prodigy and TV first',s=>`${storyBits.intro('Hazel Scott',true,'June 11, 1920','Port of Spain, Trinidad and Tobago')} I entered the ${wrapHistory('Juilliard School of Music')} as a child prodigy and in ${wrapHistory('1950')} became the ${wrapHistory('first African American to have my own TV show in America')} with ${wrapHistory('The Hazel Scott Show')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('nina-simone','Nina Simone','Singer, pianist, and protest artist','NS','Midtown Bar, classical training, and Mississippi Goddam',s=>`${storyBits.intro('Eunice Waymon',true,'February 21, 1933','Tryon, North Carolina')} After time at ${wrapHistory('Juilliard')}, I performed at the ${wrapHistory('Midtown Bar and Grill')} and changed my stage name to ${wrapHistory('Nina Simone')}. I became known for songs like ${wrapHistory('Mississippi Goddam')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('rihanna','Rihanna','Singer, performer, and global hitmaker','RF','Barbados, Def Jam, and Pon de Replay',s=>`${storyBits.intro('Robyn Rihanna Fenty',true,'February 20, 1988','Saint Michael, Barbados')} I was signed to ${wrapHistory('Def Jam Recordings')} and in ${wrapHistory('2005')} released ${wrapHistory('Music of the Sun')} and ${wrapHistory('Pon de Replay')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('michael-jackson','Michael Jackson','King of Pop and performance legend','MJ','Jackson 5, Motown, and Thriller',s=>`${storyBits.intro('Michael Jackson',true,'August 29, 1958','Gary, Indiana')} I joined the ${wrapHistory('Jackson 5')} at age ${wrapHistory('6')} and later released the huge album ${wrapHistory('Thriller')}, becoming known as the ${wrapHistory('King of Pop')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('ice-cube','Ice Cube','Rapper, writer, and chart-breaking artist','IC','N.W.A, solo rise, and platinum EP',s=>`${storyBits.intro("O'Shea Jackson Sr.",true,'June 15, 1969','Los Angeles, California')} After leaving ${wrapHistory('N.W.A')} in ${wrapHistory('1989')}, I launched a solo career with ${wrapHistory("AmeriKKKa's Most Wanted")}. My EP ${wrapHistory('Kill At Will')} became the ${wrapHistory('first rap EP certified platinum')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('miles-davis','Miles Davis','Jazz innovator and cool jazz pioneer','MD','Juilliard and Birth of the Cool',s=>`${storyBits.intro('Miles Dewey Davis III',true,'May 26, 1926','Alton, Illinois')} I studied at ${wrapHistory('Juilliard')} and from ${wrapHistory('1948')} built the sound that led to ${wrapHistory('Birth of the Cool')} and the rise of ${wrapHistory('cool jazz')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('jay-z','Jay-Z','Rapper, label founder, and music mogul','JZ','Roc-A-Fella and Hall of Fame milestones',s=>`${storyBits.intro('Shawn Carter',true,'December 4, 1969','Brooklyn, New York')} In ${wrapHistory('1995')} I started ${wrapHistory('Roc-A-Fella Records')} and in ${wrapHistory('1996')} released ${wrapHistory('Reasonable Doubt')}. I became the ${wrapHistory('first rapper honored in the Songwriters Hall of Fame')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('will-smith','Will Smith','Rapper, entertainer, and crossover star','WS','DJ Jazzy Jeff, Grammy first, and Fresh Prince',s=>`${storyBits.intro('Willard Smith II',true,'September 25, 1968','Philadelphia, Pennsylvania')} With ${wrapHistory('DJ Jazzy Jeff')}, I won the ${wrapHistory('first Grammy Award for Best Rap Performance')} in ${wrapHistory('1989')}. In ${wrapHistory('1990')} NBC built the sitcom ${wrapHistory('The Fresh Prince of Bel-Air')} around me.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
+      f('aretha-franklin','Aretha Franklin','Queen of Soul and music legend','AF','Respect, Atlantic Records, and Hall of Fame','aretha-franklin',s=>`${storyBits.intro('Aretha Franklin',true,'March 25, 1942','Memphis, Tennessee')} I recorded as a teen, later joined ${wrapHistory('Atlantic Records')}, and songs like ${wrapHistory('Respect')} made me the ${wrapHistory('Queen of Soul')}. I became the ${wrapHistory('first female performer inducted into the Rock and Roll Hall of Fame')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('beyonce','Beyoncé Knowles','Singer, performer, and global superstar','BK','Girl’s Tyme, Destiny’s Child, solo albums','beyonce',s=>`${storyBits.intro('Beyoncé Knowles',true,'September 4, 1981','Houston, Texas')} I started in ${wrapHistory("Girl's Tyme")}, and the group became ${wrapHistory('Destiny’s Child')}. In ${wrapHistory('2003')} I released ${wrapHistory('Dangerously in Love')} and later became the ${wrapHistory('first solo artist to have my first six studio albums debut at number one on the Billboard 200')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('hazel-scott','Hazel Scott','Pianist, singer, and TV pioneer','HS','Juilliard prodigy and TV first','hazel-scott',s=>`${storyBits.intro('Hazel Scott',true,'June 11, 1920','Port of Spain, Trinidad and Tobago')} I entered the ${wrapHistory('Juilliard School of Music')} as a child prodigy and in ${wrapHistory('1950')} became the ${wrapHistory('first African American to have my own TV show in America')} with ${wrapHistory('The Hazel Scott Show')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('nina-simone','Nina Simone','Singer, pianist, and protest artist','NS','Midtown Bar, classical training, and Mississippi Goddam','nina-simone',s=>`${storyBits.intro('Eunice Waymon',true,'February 21, 1933','Tryon, North Carolina')} After time at ${wrapHistory('Juilliard')}, I performed at the ${wrapHistory('Midtown Bar and Grill')} and changed my stage name to ${wrapHistory('Nina Simone')}. I became known for songs like ${wrapHistory('Mississippi Goddam')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('rihanna','Rihanna','Singer, performer, and global hitmaker','RF','Barbados, Def Jam, and Pon de Replay','rihanna',s=>`${storyBits.intro('Robyn Rihanna Fenty',true,'February 20, 1988','Saint Michael, Barbados')} I was signed to ${wrapHistory('Def Jam Recordings')} and in ${wrapHistory('2005')} released ${wrapHistory('Music of the Sun')} and ${wrapHistory('Pon de Replay')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('michael-jackson','Michael Jackson','King of Pop and performance legend','MJ','Jackson 5, Motown, and Thriller','michael-jackson',s=>`${storyBits.intro('Michael Jackson',true,'August 29, 1958','Gary, Indiana')} I joined the ${wrapHistory('Jackson 5')} at age ${wrapHistory('6')} and later released ${wrapHistory('Thriller')}, becoming known as the ${wrapHistory('King of Pop')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('ice-cube','Ice Cube','Rapper, writer, and chart-breaking artist','IC','N.W.A, solo rise, and platinum EP','ice-cube',s=>`${storyBits.intro("O'Shea Jackson Sr.",true,'June 15, 1969','Los Angeles, California')} After leaving ${wrapHistory('N.W.A')} in ${wrapHistory('1989')}, I launched a solo career with ${wrapHistory("AmeriKKKa's Most Wanted")}. My EP ${wrapHistory('Kill At Will')} became the ${wrapHistory('first rap EP certified platinum')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('miles-davis','Miles Davis','Jazz innovator and cool jazz pioneer','MD','Juilliard and Birth of the Cool','miles-davis',s=>`${storyBits.intro('Miles Dewey Davis III',true,'May 26, 1926','Alton, Illinois')} I studied at ${wrapHistory('Juilliard')} and from ${wrapHistory('1948')} built the sound that led to ${wrapHistory('Birth of the Cool')} and the rise of ${wrapHistory('cool jazz')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('jay-z','Jay-Z','Rapper, label founder, and music mogul','JZ','Roc-A-Fella and Hall of Fame milestones','jay-z',s=>`${storyBits.intro('Shawn Carter',true,'December 4, 1969','Brooklyn, New York')} In ${wrapHistory('1995')} I started ${wrapHistory('Roc-A-Fella Records')} and in ${wrapHistory('1996')} released ${wrapHistory('Reasonable Doubt')}. I became the ${wrapHistory('first rapper honored in the Songwriters Hall of Fame')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('will-smith','Will Smith','Rapper, entertainer, and crossover star','WS','DJ Jazzy Jeff, Grammy first, and Fresh Prince','will-smith',s=>`${storyBits.intro('Willard Smith II',true,'September 25, 1968','Philadelphia, Pennsylvania')} With ${wrapHistory('DJ Jazzy Jeff')}, I won the ${wrapHistory('first Grammy Award for Best Rap Performance')} in ${wrapHistory('1989')}. In ${wrapHistory('1990')} NBC built ${wrapHistory('The Fresh Prince of Bel-Air')} around me.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
     ]
   },
   {
     id:'professions', name:'Professions', initials:'PR', hint:'Education, journalism, law, science, and public achievement', figures:[
-      f('carter-woodson','Carter G. Woodson','Historian, educator, and founder of Negro History Week','CW','Harvard Ph.D., ASLNH, and Black history study',s=>`${storyBits.intro('Carter G. Woodson',true,'December 19, 1875','New Canton, Virginia')} I earned a degree in ${wrapHistory('literature from Berea College')} and completed my ${wrapHistory('Ph.D. in history at Harvard University in 1912')}. In ${wrapHistory('1915')} I founded the ${wrapHistory('Association for the Study of Negro Life and History (ASLNH)')}, and in ${wrapHistory('1926')} I celebrated ${wrapHistory('Negro History Week')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('benjamin-banneker','Benjamin Banneker','Surveyor, almanac writer, and astronomer','BB','Washington survey and eclipse prediction',s=>`${storyBits.intro('Benjamin Banneker',true,'November 9, 1731','Baltimore County, Province of Maryland')} In ${wrapHistory('1791')} I joined a team surveying land that became ${wrapHistory('Washington, D.C.')}. I published ${wrapHistory('almanacs from 1792 to 1797')} and predicted the ${wrapHistory('solar eclipse of 1789')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('donald-glover','Donald Glover Jr.','Writer, actor, musician, and creator','DG','NYU, 30 Rock, Community, and Atlanta',s=>`${storyBits.intro('Donald Glover Jr.',true,'September 25, 1983','Edwards Air Force Base, California')} I graduated from ${wrapHistory('NYU Tisch School of the Arts')} in ${wrapHistory('2006')} with a degree in ${wrapHistory('dramatic writing')}. I wrote for ${wrapHistory('30 Rock')}, starred in ${wrapHistory('Community')}, created ${wrapHistory('Atlanta')}, and released music.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('stephen-a-smith','Stephen A. Smith','Sports journalist, commentator, and radio host','SS','Winston-Salem State and sports media career',s=>`${storyBits.intro('Stephen Anthony Smith',true,'October 14, 1967','the Bronx, New York')} I earned a degree in ${wrapHistory('mass communication from Winston-Salem State University in 1991')}. In ${wrapHistory('1994')} I joined ${wrapHistory('The Philadelphia Inquirer')} and later became a major sports media personality.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('web-du-bois','W.E.B. Du Bois','Scholar, sociologist, and civil rights founder','WD','Harvard Ph.D., Atlanta University, and NAACP',s=>`${storyBits.intro('William Edward Burghardt Du Bois',true,'February 23, 1868','Great Barrington, Massachusetts')} In ${wrapHistory('1895')} I became the ${wrapHistory('first African American to earn a Ph.D. from Harvard University')}. I taught at ${wrapHistory('Atlanta University')} and in ${wrapHistory('1909')} helped found the ${wrapHistory('NAACP')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('robin-roberts','Robin Roberts','Broadcaster, sportscaster, and anchor','RR','ESPN and Good Morning America',s=>`${storyBits.intro('Robin Roberts',true,'November 23, 1960','Tuskegee, Alabama')} I earned a degree in ${wrapHistory('communication from Southeastern Louisiana University in 1983')}. I joined ${wrapHistory('ESPN in 1990')} and became co-anchor of ${wrapHistory('Good Morning America')} in ${wrapHistory('2005')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('mary-mcleod-bethune','Mary McLeod Bethune','Educator, school founder, and college builder','MB','Florida school founder and Bethune-Cookman',s=>`${storyBits.intro('Mary Jane McLeod',true,'July 10, 1875','Mayesville, South Carolina')} In ${wrapHistory('1904')} I opened the ${wrapHistory('Educational and Industrial Training School for Negro Girls')}. In ${wrapHistory('1931')} it merged with ${wrapHistory('Cookman Institute')} to become ${wrapHistory('Bethune-Cookman College')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('mae-jemison','Mae Jemison','Doctor, engineer, and astronaut','MJ','Stanford, Cornell, Peace Corps, and spaceflight',s=>`${storyBits.intro('Mae Jemison',true,'October 17, 1956','Decatur, Alabama')} I entered ${wrapHistory('Stanford University at age 16')} and later earned my medical degree from ${wrapHistory('Cornell University')}. In ${wrapHistory('1987')} I became the ${wrapHistory('first Black woman astronaut')}, and on ${wrapHistory('STS-47 in 1992')} became the ${wrapHistory('first Black woman to travel into space')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('ketanji-brown-jackson','Ketanji Brown Jackson','Judge and Supreme Court trailblazer','KJ','Harvard and Supreme Court history',s=>`${storyBits.intro('Ketanji Onyika Brown',true,'September 14, 1970','Washington, D.C.')} I earned degrees from ${wrapHistory('Harvard University')} and in ${wrapHistory('2022')} became the ${wrapHistory('first Black woman confirmed to serve on the U.S. Supreme Court')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('ida-b-wells','Ida B. Wells','Journalist, editor, and anti-lynching crusader','IW','Memphis journalism and Southern Horrors',s=>`${storyBits.intro('Ida Bell Wells',true,'July 16, 1862','Holly Springs, Mississippi')} In ${wrapHistory('1889')} I became editor and co-owner of ${wrapHistory('The Free Speech and Headlight')}. After violence in ${wrapHistory('1892')}, I published anti-lynching research including ${wrapHistory('Southern Horrors: Lynch Law in All Its Phases')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
+      f('carter-woodson','Carter G. Woodson','Historian, educator, and founder of Negro History Week','CW','Harvard Ph.D., ASLNH, and Black history study','carter-woodson',s=>`${storyBits.intro('Carter G. Woodson',true,'December 19, 1875','New Canton, Virginia')} I earned a degree from ${wrapHistory('Berea College')} and completed my ${wrapHistory('Ph.D. in history at Harvard University in 1912')}. In ${wrapHistory('1915')} I founded the ${wrapHistory('Association for the Study of Negro Life and History (ASLNH)')}, and in ${wrapHistory('1926')} I celebrated ${wrapHistory('Negro History Week')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('benjamin-banneker','Benjamin Banneker','Surveyor, almanac writer, and astronomer','BB','Washington survey and eclipse prediction','benjamin-banneker',s=>`${storyBits.intro('Benjamin Banneker',true,'November 9, 1731','Baltimore County, Province of Maryland')} In ${wrapHistory('1791')} I joined a team surveying land that became ${wrapHistory('Washington, D.C.')}. I published ${wrapHistory('almanacs from 1792 to 1797')} and predicted the ${wrapHistory('solar eclipse of 1789')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('donald-glover','Donald Glover Jr.','Writer, actor, musician, and creator','DG','NYU, 30 Rock, Community, and Atlanta','donald-glover',s=>`${storyBits.intro('Donald Glover Jr.',true,'September 25, 1983','Edwards Air Force Base, California')} I graduated from ${wrapHistory('NYU Tisch School of the Arts')} with a degree in ${wrapHistory('dramatic writing')}. I wrote for ${wrapHistory('30 Rock')}, starred in ${wrapHistory('Community')}, created ${wrapHistory('Atlanta')}, and released music.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('stephen-a-smith','Stephen A. Smith','Sports journalist, commentator, and radio host','SS','Winston-Salem State and sports media career','stephen-a-smith',s=>`${storyBits.intro('Stephen Anthony Smith',true,'October 14, 1967','the Bronx, New York')} I earned a degree in ${wrapHistory('mass communication from Winston-Salem State University in 1991')}. In ${wrapHistory('1994')} I joined ${wrapHistory('The Philadelphia Inquirer')} and later became a major sports media personality.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('web-du-bois','W.E.B. Du Bois','Scholar, sociologist, and civil rights founder','WD','Harvard Ph.D., Atlanta University, and NAACP','web-du-bois',s=>`${storyBits.intro('William Edward Burghardt Du Bois',true,'February 23, 1868','Great Barrington, Massachusetts')} In ${wrapHistory('1895')} I became the ${wrapHistory('first African American to earn a Ph.D. from Harvard University')}. I taught at ${wrapHistory('Atlanta University')} and in ${wrapHistory('1909')} helped found the ${wrapHistory('NAACP')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('robin-roberts','Robin Roberts','Broadcaster, sportscaster, and anchor','RR','ESPN and Good Morning America','robin-roberts',s=>`${storyBits.intro('Robin Roberts',true,'November 23, 1960','Tuskegee, Alabama')} I earned a degree in ${wrapHistory('communication from Southeastern Louisiana University in 1983')}. I joined ${wrapHistory('ESPN in 1990')} and became co-anchor of ${wrapHistory('Good Morning America')} in ${wrapHistory('2005')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('mary-mcleod-bethune','Mary McLeod Bethune','Educator, school founder, and college builder','MB','Florida school founder and Bethune-Cookman','mary-mcleod-bethune',s=>`${storyBits.intro('Mary Jane McLeod',true,'July 10, 1875','Mayesville, South Carolina')} In ${wrapHistory('1904')} I opened the ${wrapHistory('Educational and Industrial Training School for Negro Girls')}. In ${wrapHistory('1931')} it merged with ${wrapHistory('Cookman Institute')} to become ${wrapHistory('Bethune-Cookman College')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('mae-jemison','Mae Jemison','Doctor, engineer, and astronaut','MJ','Stanford, Cornell, Peace Corps, and spaceflight','mae-jemison',s=>`${storyBits.intro('Mae Jemison',true,'October 17, 1956','Decatur, Alabama')} I entered ${wrapHistory('Stanford University at age 16')} and later earned my medical degree from ${wrapHistory('Cornell University')}. In ${wrapHistory('1987')} I became the ${wrapHistory('first Black woman astronaut')}, and on ${wrapHistory('STS-47 in 1992')} became the ${wrapHistory('first Black woman to travel into space')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('ketanji-brown-jackson','Ketanji Brown Jackson','Judge and Supreme Court trailblazer','KJ','Harvard and Supreme Court history','ketanji-brown-jackson',s=>`${storyBits.intro('Ketanji Onyika Brown',true,'September 14, 1970','Washington, D.C.')} I earned degrees from ${wrapHistory('Harvard University')} and in ${wrapHistory('2022')} became the ${wrapHistory('first Black woman confirmed to serve on the U.S. Supreme Court')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('ida-b-wells','Ida B. Wells','Journalist, editor, and anti-lynching crusader','IW','Memphis journalism and Southern Horrors','ida-b-wells',s=>`${storyBits.intro('Ida Bell Wells',true,'July 16, 1862','Holly Springs, Mississippi')} In ${wrapHistory('1889')} I became editor and co-owner of ${wrapHistory('The Free Speech and Headlight')}. After violence in ${wrapHistory('1892')}, I published anti-lynching research including ${wrapHistory('Southern Horrors: Lynch Law in All Its Phases')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
     ]
   },
   {
     id:'sports', name:'Sports', initials:'SP', hint:'Champions, Olympians, and game-changing athletes', figures:[
-      f('arthur-ashe','Arthur Ashe','Tennis champion and history-maker','AA','UCLA, Grand Slams, and Davis Cup',s=>`${storyBits.intro('Arthur Robert Ashe Jr.',true,'July 10, 1943','Richmond, Virginia')} I earned a scholarship to ${wrapHistory('UCLA in 1963')}, later won ${wrapHistory('three Grand Slam singles titles')}, and became the ${wrapHistory('first Black player selected for the United States Davis Cup team')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('muhammad-ali','Muhammad Ali','Heavyweight champion and Olympic gold medalist','MA','Rome Olympics, Sonny Liston, and “The Greatest”',s=>`${storyBits.intro('Cassius Marcellus Clay Jr.',true,'January 17, 1942','Louisville, Kentucky')} I won the ${wrapHistory('light heavyweight gold medal in the 1960 Summer Olympics in Rome')}, turned professional in ${wrapHistory('1960')}, and became heavyweight champion by defeating ${wrapHistory('Sonny Liston')}. People knew me as ${wrapHistory('The Greatest')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('tiger-woods','Tiger Woods','Golf champion and major winner','TW','Stanford, U.S. Amateur, and PGA history',s=>`${storyBits.intro('Eldrick Tont Woods',true,'December 30, 1975','Cypress, California')} I attended ${wrapHistory('Stanford University')} and in ${wrapHistory('1996')} became the ${wrapHistory('first golfer to win three consecutive U.S. Amateur titles and the NCAA individual golf championship')}. I then turned professional and became one of golf’s greatest champions.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('jackie-robinson','Jackie Robinson','Multi-sport athlete and baseball pioneer','JR','UCLA, Dodgers, and breaking barriers',s=>`${storyBits.intro('Jack Roosevelt Robinson',true,'January 31, 1919','Cairo, Georgia')} At ${wrapHistory('UCLA')} I became the ${wrapHistory('school’s first athlete to win varsity letters in four sports')}. I made my major league debut on ${wrapHistory('April 15, 1947')}, and in ${wrapHistory('1955')} won a championship with the ${wrapHistory('Brooklyn Dodgers')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('lebron-james','LeBron James','Basketball superstar and community builder','LJ','Cavaliers, championships, and I Promise School',s=>`${storyBits.intro('LeBron Raymone James Sr.',true,'December 30, 1984','Akron, Ohio')} I was drafted ${wrapHistory('number 1 by the Cleveland Cavaliers')} and have won ${wrapHistory('four NBA championships')}. In ${wrapHistory('2018')} I opened the ${wrapHistory('I Promise School')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('serena-williams','Serena Williams','Tennis champion and Grand Slam legend','SW','Surface Slam and 23 majors',s=>`${storyBits.intro('Serena Williams',true,'September 26, 1981','Saginaw, Michigan')} I turned professional in ${wrapHistory('1995')} and by ${wrapHistory('2002')} became ${wrapHistory('ranked number one')}. I won ${wrapHistory('23 Grand Slam singles titles')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('wilma-rudolph','Wilma Rudolph','Olympic sprinter and record-setter','WR','TSU, Melbourne, Rome, and three golds',s=>`${storyBits.intro('Wilma Rudolph',true,'June 23, 1940','Saint Bethlehem, Tennessee')} I attended ${wrapHistory('Tennessee State University')}. In the ${wrapHistory('1960 Summer Olympics in Rome')} I won ${wrapHistory('three gold medals')} and became the ${wrapHistory('first American woman to win three gold medals in a single Olympiad')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('candace-parker','Candace Parker','Basketball star and WNBA champion','CP','Tennessee, dunks, and WNBA titles',s=>`${storyBits.intro('Candace Parker',true,'April 19, 1986','St. Louis, Missouri')} I attended ${wrapHistory('Tennessee')} and won ${wrapHistory('two consecutive national championships in 2007 and 2008')}. I later won ${wrapHistory('two WNBA championships')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('simone-biles','Simone Biles','Gymnast and world champion','SB','World medals, all-around titles, and named skills',s=>`${storyBits.intro('Simone Biles',true,'March 14, 1997','Columbus, Ohio')} I became the ${wrapHistory('first Black gymnast to become the World All-Around champion')} and by ${wrapHistory('2022')} had won ${wrapHistory('25 World Championship medals, 19 of them gold')}. I also became the ${wrapHistory('first woman to land the Yurchenko double pike in competition')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('bo-jackson','Bo Jackson','Two-sport star and Heisman winner','BJ','Auburn, Heisman, and dual-sport All-Star fame',s=>`${storyBits.intro('Vincent Edward Jackson',true,'November 30, 1962','Bessemer, Alabama')} I attended ${wrapHistory('Auburn University')} and won the ${wrapHistory('Heisman Trophy in 1985')}. I later played for the ${wrapHistory('Kansas City Royals')} and the ${wrapHistory('Los Angeles Raiders')} and became the ${wrapHistory('only professional athlete named an All-Star in both baseball and football')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
+      f('arthur-ashe','Arthur Ashe','Tennis champion and history-maker','AA','UCLA, Grand Slams, and Davis Cup','arthur-ashe',s=>`${storyBits.intro('Arthur Robert Ashe Jr.',true,'July 10, 1943','Richmond, Virginia')} I earned a scholarship to ${wrapHistory('UCLA in 1963')}, later won ${wrapHistory('three Grand Slam singles titles')}, and became the ${wrapHistory('first Black player selected for the United States Davis Cup team')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('muhammad-ali','Muhammad Ali','Heavyweight champion and Olympic gold medalist','MA','Rome Olympics, Sonny Liston, and “The Greatest”','muhammad-ali',s=>`${storyBits.intro('Cassius Marcellus Clay Jr.',true,'January 17, 1942','Louisville, Kentucky')} I won the ${wrapHistory('light heavyweight gold medal in the 1960 Summer Olympics in Rome')}, turned professional in ${wrapHistory('1960')}, and became heavyweight champion by defeating ${wrapHistory('Sonny Liston')}. People knew me as ${wrapHistory('The Greatest')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('tiger-woods','Tiger Woods','Golf champion and major winner','TW','Stanford, U.S. Amateur, and PGA history','tiger-woods',s=>`${storyBits.intro('Eldrick Tont Woods',true,'December 30, 1975','Cypress, California')} I attended ${wrapHistory('Stanford University')} and in ${wrapHistory('1996')} became the ${wrapHistory('first golfer to win three consecutive U.S. Amateur titles and the NCAA individual golf championship')}. I then turned professional and became one of golf’s greatest champions.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('jackie-robinson','Jackie Robinson','Multi-sport athlete and baseball pioneer','JR','UCLA, Dodgers, and breaking barriers','jackie-robinson',s=>`${storyBits.intro('Jack Roosevelt Robinson',true,'January 31, 1919','Cairo, Georgia')} At ${wrapHistory('UCLA')} I became the ${wrapHistory('school’s first athlete to win varsity letters in four sports')}. I made my major league debut on ${wrapHistory('April 15, 1947')}, and in ${wrapHistory('1955')} won a championship with the ${wrapHistory('Brooklyn Dodgers')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('lebron-james','LeBron James','Basketball superstar and community builder','LJ','Cavaliers, championships, and I Promise School','lebron-james',s=>`${storyBits.intro('LeBron Raymone James Sr.',true,'December 30, 1984','Akron, Ohio')} I was drafted ${wrapHistory('number 1 by the Cleveland Cavaliers')} and have won ${wrapHistory('four NBA championships')}. In ${wrapHistory('2018')} I opened the ${wrapHistory('I Promise School')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('serena-williams','Serena Williams','Tennis champion and Grand Slam legend','SW','Surface Slam and 23 majors','serena-williams',s=>`${storyBits.intro('Serena Williams',true,'September 26, 1981','Saginaw, Michigan')} I turned professional in ${wrapHistory('1995')} and by ${wrapHistory('2002')} became ${wrapHistory('ranked number one')}. I won ${wrapHistory('23 Grand Slam singles titles')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('wilma-rudolph','Wilma Rudolph','Olympic sprinter and record-setter','WR','TSU, Melbourne, Rome, and three golds','wilma-rudolph',s=>`${storyBits.intro('Wilma Rudolph',true,'June 23, 1940','Saint Bethlehem, Tennessee')} I attended ${wrapHistory('Tennessee State University')}. In the ${wrapHistory('1960 Summer Olympics in Rome')} I won ${wrapHistory('three gold medals')} and became the ${wrapHistory('first American woman to win three gold medals in a single Olympiad')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('candace-parker','Candace Parker','Basketball star and WNBA champion','CP','Tennessee, dunks, and WNBA titles','candace-parker',s=>`${storyBits.intro('Candace Parker',true,'April 19, 1986','St. Louis, Missouri')} I attended ${wrapHistory('Tennessee')} and won ${wrapHistory('two consecutive national championships in 2007 and 2008')}. I later won ${wrapHistory('two WNBA championships')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('simone-biles','Simone Biles','Gymnast and world champion','SB','World medals, all-around titles, and named skills','simone-biles',s=>`${storyBits.intro('Simone Biles',true,'March 14, 1997','Columbus, Ohio')} I became the ${wrapHistory('first Black gymnast to become the World All-Around champion')} and by ${wrapHistory('2022')} had won ${wrapHistory('25 World Championship medals, 19 of them gold')}. I also became the ${wrapHistory('first woman to land the Yurchenko double pike in competition')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('bo-jackson','Bo Jackson','Two-sport star and Heisman winner','BJ','Auburn, Heisman, and dual-sport All-Star fame','bo-jackson',s=>`${storyBits.intro('Vincent Edward Jackson',true,'November 30, 1962','Bessemer, Alabama')} I attended ${wrapHistory('Auburn University')} and won the ${wrapHistory('Heisman Trophy in 1985')}. I later played for the ${wrapHistory('Kansas City Royals')} and the ${wrapHistory('Los Angeles Raiders')} and became the ${wrapHistory('only professional athlete named an All-Star in both baseball and football')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
     ]
   },
   {
     id:'arts', name:'The Arts', initials:'AR', hint:'Visual art, poetry, photography, and literary creativity', figures:[
-      f('augusta-savage','Augusta Savage','Sculptor and Harlem Renaissance artist','AS','Cooper Union, Gamin, and sculpture',s=>`${storyBits.intro('Augusta Savage',true,'February 29, 1892','Green Cove Springs, Florida')} I attended ${wrapHistory('The Cooper Union in New York')} and got my first commission from the ${wrapHistory('New York Public Library')}. I created a sculpture of ${wrapHistory('W.E.B. Du Bois')} and works like ${wrapHistory('Gamin')}, ${wrapHistory('The Tom Tom')}, and ${wrapHistory('Marcus Garvey')}. I became a central figure in the ${wrapHistory('Harlem Renaissance')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('faith-ringgold','Faith Ringgold','Artist, author, and quilt innovator','FR','Quilted narrations and children’s books',s=>`${storyBits.intro('Faith Ringgold',true,'October 8, 1930','Harlem, Manhattan, New York')} I attended ${wrapHistory('City College of New York')} and earned bachelor’s and master’s degrees in art. I became known for ${wrapHistory('innovative quilted narrations')} like ${wrapHistory('Street Story')} and ${wrapHistory('Tar Beach 2')}, and I wrote and illustrated ${wrapHistory('17 children’s books')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('june-jordan','June Jordan','Poet, essayist, and activist writer','JJA','Black English, first book, and human rights',s=>`${storyBits.intro('June Jordan',true,'July 9, 1936','Harlem, New York')} I attended ${wrapHistory('Northfield Mount Hermon School')} and became known for my commitment to ${wrapHistory('human rights and political activism')}. I published my first book, ${wrapHistory('Who Look at Me')}, in ${wrapHistory('1969')} and defended the value of ${wrapHistory('Black English')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('maya-angelou','Maya Angelou','Poet, memoirist, and cultural icon','MAA','Streetcar conductor and inaugural poem',s=>`${storyBits.intro('Maya Angelou',true,'April 4, 1928','St. Louis, Missouri')} I attended the ${wrapHistory('California Labor School in San Francisco')} and became the ${wrapHistory('first Black woman streetcar conductor in San Francisco')}. I became known for works like ${wrapHistory('I Know Why the Caged Bird Sings')} and was the ${wrapHistory('first Black poet to present at a presidential inauguration')}, reading ${wrapHistory('On the Pulse of Morning')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('phillis-wheatley','Phillis Wheatley','Poet and publishing pioneer','PW','First published poet of African descent in colonial America',s=>`${storyBits.intro('Phillis Wheatley',false,'1753','West Africa')} I was brought to Boston on a ship called ${wrapHistory('Phillis')}, which became my first name. I published my first book in ${wrapHistory('1773')} at age ${wrapHistory('20')} and became the ${wrapHistory('first person of African descent to have work published in colonial America')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('michael-s-harper','Michael S. Harper','Poet and English professor','MHR','Jazz poetry and Dear John, Dear Coltrane',s=>`${storyBits.intro('Michael S. Harper',true,'March 18, 1938','Brooklyn, New York')} I studied English at ${wrapHistory('Los Angeles City College')} and became known for ${wrapHistory('blending poetry with jazz')}. After encouragement from ${wrapHistory('Gwendolyn Brooks')}, I published ${wrapHistory('Dear John, Dear Coltrane')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('basquiat','Jean-Michel Basquiat','Painter and graffiti artist','JBQ','SAMO, Brooklyn Museum, and record auction',s=>`${storyBits.intro('Jean-Michel Basquiat',true,'December 22, 1960','Park Slope, Brooklyn, New York')} With ${wrapHistory('Al Diaz')} I created the name ${wrapHistory('SAMO')} and used graffiti in Lower Manhattan. I sold my first painting to ${wrapHistory('Debbie Harry')} and later had the exhibition ${wrapHistory('One Basquiat')} at the ${wrapHistory('Brooklyn Museum')}. One of my pieces sold for ${wrapHistory('$110.5 million')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('james-baldwin','James Baldwin','Novelist, essayist, and civil rights voice','JBL','The Magpie, Paris, and CORE',s=>`${storyBits.intro('James Baldwin',true,'August 2, 1924','Harlem, New York')} I attended ${wrapHistory('DeWitt Clinton High School')} and worked on the magazine ${wrapHistory('The Magpie')}. At age ${wrapHistory('24')} I moved to ${wrapHistory('Paris')} and later returned to the U.S. to join ${wrapHistory('CORE')}. I became known for works like ${wrapHistory('Notes of a Native Son')}, ${wrapHistory('Giovanni’s Room')}, and ${wrapHistory('The Fire Next Time')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('james-weldon-johnson','James Weldon Johnson','Writer, activist, and lyricist','JWJ','Lift Every Voice and Sing and Silent March',s=>`${storyBits.intro('James Weldon Johnson',true,'June 17, 1871','Jacksonville, Florida')} I attended ${wrapHistory('Atlanta University')} and wrote ${wrapHistory('Lift Every Voice and Sing')}, known as the ${wrapHistory('Negro National Anthem')}. In ${wrapHistory('1917')} I organized the ${wrapHistory('Silent March')} down Fifth Avenue and was part of the ${wrapHistory('Harlem Renaissance')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
-      f('gordon-parks','Gordon Parks','Photographer, director, and visual storyteller','GP','Life magazine and American Gothic',s=>`${storyBits.intro('Gordon Parks',true,'November 30, 1912','Fort Scott, Kansas')} I trained with the ${wrapHistory('Farm Security Administration')} under ${wrapHistory('Roy Stryker')}, creating the famous photograph ${wrapHistory('American Gothic')}. In ${wrapHistory('1948')} I became the ${wrapHistory('first African American staff photographer for Life magazine')}. I also became the ${wrapHistory('first African American to direct a major motion picture')} with ${wrapHistory('The Learning Tree')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
+      f('augusta-savage','Augusta Savage','Sculptor and Harlem Renaissance artist','AS','Cooper Union, Gamin, and sculpture','augusta-savage',s=>`${storyBits.intro('Augusta Savage',true,'February 29, 1892','Green Cove Springs, Florida')} I attended ${wrapHistory('The Cooper Union in New York')} and created works like ${wrapHistory('Gamin')}, ${wrapHistory('The Tom Tom')}, and a sculpture of ${wrapHistory('W.E.B. Du Bois')}. I became a central figure in the ${wrapHistory('Harlem Renaissance')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('faith-ringgold','Faith Ringgold','Artist, author, and quilt innovator','FR','Quilted narrations and children’s books','faith-ringgold',s=>`${storyBits.intro('Faith Ringgold',true,'October 8, 1930','Harlem, Manhattan, New York')} I attended ${wrapHistory('City College of New York')} and became known for ${wrapHistory('innovative quilted narrations')} like ${wrapHistory('Street Story')} and ${wrapHistory('Tar Beach 2')}. I also wrote and illustrated ${wrapHistory('17 children’s books')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('june-jordan','June Jordan','Poet, essayist, and activist writer','JJA','Black English, first book, and human rights','june-jordan',s=>`${storyBits.intro('June Jordan',true,'July 9, 1936','Harlem, New York')} I attended ${wrapHistory('Northfield Mount Hermon School')} and published my first book, ${wrapHistory('Who Look at Me')}, in ${wrapHistory('1969')}. I was also known for defending the value of ${wrapHistory('Black English')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('maya-angelou','Maya Angelou','Poet, memoirist, and cultural icon','MAA','Streetcar conductor and inaugural poem','maya-angelou',s=>`${storyBits.intro('Maya Angelou',true,'April 4, 1928','St. Louis, Missouri')} I attended the ${wrapHistory('California Labor School in San Francisco')} and became the ${wrapHistory('first Black woman streetcar conductor in San Francisco')}. I became known for ${wrapHistory('I Know Why the Caged Bird Sings')} and read ${wrapHistory('On the Pulse of Morning')} at a presidential inauguration.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('phillis-wheatley','Phillis Wheatley','Poet and publishing pioneer','PW','First published poet of African descent in colonial America','phillis-wheatley',s=>`${storyBits.intro('Phillis Wheatley',false,'1753','West Africa')} I published my first book in ${wrapHistory('1773')} at age ${wrapHistory('20')} and became the ${wrapHistory('first person of African descent to have work published in colonial America')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('michael-s-harper','Michael S. Harper','Poet and English professor','MHR','Jazz poetry and Dear John, Dear Coltrane','michael-s-harper',s=>`${storyBits.intro('Michael S. Harper',true,'March 18, 1938','Brooklyn, New York')} I became known for ${wrapHistory('blending poetry with jazz')} and published ${wrapHistory('Dear John, Dear Coltrane')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('basquiat','Jean-Michel Basquiat','Painter and graffiti artist','JBQ','SAMO, Brooklyn Museum, and record auction','basquiat',s=>`${storyBits.intro('Jean-Michel Basquiat',true,'December 22, 1960','Park Slope, Brooklyn, New York')} With ${wrapHistory('Al Diaz')} I created the name ${wrapHistory('SAMO')} and later had the exhibition ${wrapHistory('One Basquiat')} at the ${wrapHistory('Brooklyn Museum')}. One of my pieces sold for ${wrapHistory('$110.5 million')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('james-baldwin','James Baldwin','Novelist, essayist, and civil rights voice','JBL','The Magpie, Paris, and CORE','james-baldwin',s=>`${storyBits.intro('James Baldwin',true,'August 2, 1924','Harlem, New York')} I worked on the school magazine ${wrapHistory('The Magpie')}, moved to ${wrapHistory('Paris')}, later joined ${wrapHistory('CORE')}, and wrote works like ${wrapHistory('Notes of a Native Son')} and ${wrapHistory('The Fire Next Time')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('james-weldon-johnson','James Weldon Johnson','Writer, activist, and lyricist','JWJ','Lift Every Voice and Sing and Silent March','james-weldon-johnson',s=>`${storyBits.intro('James Weldon Johnson',true,'June 17, 1871','Jacksonville, Florida')} I attended ${wrapHistory('Atlanta University')} and wrote ${wrapHistory('Lift Every Voice and Sing')}, known as the ${wrapHistory('Negro National Anthem')}. In ${wrapHistory('1917')} I organized the ${wrapHistory('Silent March')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`),
+      f('gordon-parks','Gordon Parks','Photographer, director, and visual storyteller','GP','Life magazine and American Gothic','gordon-parks',s=>`${storyBits.intro('Gordon Parks',true,'November 30, 1912','Fort Scott, Kansas')} I created the famous photograph ${wrapHistory('American Gothic')}. In ${wrapHistory('1948')} I became the ${wrapHistory('first African American staff photographer for Life magazine')}, and later directed ${wrapHistory('The Learning Tree')}.${storyBits.close(s.adjective1,s.adjective2,s.noun1,s.noun2,s.place1,s.verb1,s.verb2,s.adverb1,s.quality1,s.celebration1)}`)
     ]
   }
 ];
@@ -309,44 +767,313 @@ const wordBanks = {
   celebration1:['Hooray','Celebrate','Salute','Honor','Cheer','Applause','Respect','Shine on','Big cheers','Way to go','History power']
 };
 
-const storageKey = 'wglt_madlibs_progress_v4';
+WORD_BANKS_BY_LANG.en = wordBanks;
+
+const storageKey = 'wglt_madlibs_progress_v5';
 const els = {
-  subjectScreen: document.getElementById('subjectScreen'), figureScreen: document.getElementById('figureScreen'), builderScreen: document.getElementById('builderScreen'),
-  subjectGrid: document.getElementById('subjectGrid'), figureGrid: document.getElementById('figureGrid'), globalBadge: document.getElementById('globalBadge'), globalFiguresBadge: document.getElementById('globalFiguresBadge'),
-  subjectBadge: document.getElementById('subjectBadge'), currentSubjectBadge: document.getElementById('currentSubjectBadge'), selectedThumb: document.getElementById('selectedThumb'), selectedName: document.getElementById('selectedName'), selectedSubtitle: document.getElementById('selectedSubtitle'),
+  subjectScreen: document.getElementById('subjectScreen'),
+  figureScreen: document.getElementById('figureScreen'),
+  builderScreen: document.getElementById('builderScreen'),
+  subjectGrid: document.getElementById('subjectGrid'),
+  figureGrid: document.getElementById('figureGrid'),
+  globalBadge: document.getElementById('globalBadge'),
+  globalFiguresBadge: document.getElementById('globalFiguresBadge'),
+  subjectBadge: document.getElementById('subjectBadge'),
+  currentSubjectBadge: document.getElementById('currentSubjectBadge'),
+  selectedThumb: document.getElementById('selectedThumb'),
+  selectedName: document.getElementById('selectedName'),
+  selectedSubtitle: document.getElementById('selectedSubtitle'),
   adjective1: document.getElementById('adjective1'), adjective2: document.getElementById('adjective2'), noun1: document.getElementById('noun1'), noun2: document.getElementById('noun2'), place1: document.getElementById('place1'), verb1: document.getElementById('verb1'), verb2: document.getElementById('verb2'), adverb1: document.getElementById('adverb1'), quality1: document.getElementById('quality1'), celebration1: document.getElementById('celebration1'),
   buildBtn: document.getElementById('buildBtn'), randomWordsBtn: document.getElementById('randomWordsBtn'), speakBtn: document.getElementById('speakBtn'), stopBtn: document.getElementById('stopBtn'), backToSubjectsBtn: document.getElementById('backToSubjectsBtn'), backToFiguresBtn: document.getElementById('backToFiguresBtn'), randomFigureBtn: document.getElementById('randomFigureBtn'), randomCurrentSubjectBtn: document.getElementById('randomCurrentSubjectBtn'),
-  storyText: document.getElementById('storyText'), storyBadge: document.getElementById('storyBadge'), voiceStatus: document.getElementById('voiceStatus'), meterFill: document.getElementById('meterFill'), meterText: document.getElementById('meterText'), progressTitle: document.getElementById('progressTitle'), figureChecklist: document.getElementById('figureChecklist')
+  storyText: document.getElementById('storyText'), storyBadge: document.getElementById('storyBadge'), voiceStatus: document.getElementById('voiceStatus'), meterFill: document.getElementById('meterFill'), meterText: document.getElementById('meterText'), progressTitle: document.getElementById('progressTitle'), figureChecklist: document.getElementById('figureChecklist'),
+  langEnBtn: document.getElementById('langEnBtn'), langEsBtn: document.getElementById('langEsBtn'), heroTitle: document.getElementById('heroTitle'), heroDesc: document.getElementById('heroDesc'), subjectsTitle: document.getElementById('subjectsTitle'), figuresTitle: document.getElementById('figuresTitle'), legendTitle: document.getElementById('legendTitle'), trackerTitle: document.getElementById('trackerTitle'), resetProgressBtn: document.getElementById('resetProgressBtn')
 };
 
 let currentSubject = null, currentFigure = null, currentStory = '';
 let progress = loadProgress();
 
 function wrapChoice(type, value){ return `<span class="choice choice-${type}">${value}</span>`; }
+function t(key){ return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS.en[key] || key; }
+function stripHtml(html){ const div=document.createElement('div'); div.innerHTML=html; return div.textContent || div.innerText || ''; }
+function translateStoryHtmlToSpanish(html){
+  const replacements = [
+    ['Hi, my name is ', 'Hola, mi nombre es '],
+    ['I was born on ', 'Nací el '],
+    ['I was born ', 'Nací '],
+    [' I studied at ', ' Estudié en '],
+    [' I graduated from ', ' Me gradué de '],
+    [' I earned a degree from ', ' Obtuve un título de '],
+    [' I earned a scholarship to ', ' Obtuve una beca para '],
+    [' I attended ', ' Asistí a '],
+    [' I joined ', ' Me uní a '],
+    [' I later joined ', ' Más tarde me uní a '],
+    [' I later became ', ' Más tarde me convertí en '],
+    [' I became known as ', ' Llegué a ser conocido como '],
+    [' I became known for ', ' Llegué a ser conocido por '],
+    [' I became the ', ' Me convertí en el/la '],
+    [' I later played ', ' Más tarde interpreté a '],
+    [' I later created ', ' Más tarde creé '],
+    [' I later helped found ', ' Más tarde ayudé a fundar '],
+    [' I later helped launch ', ' Más tarde ayudé a lanzar '],
+    [' I later won ', ' Más tarde gané '],
+    [' I later served ', ' Más tarde serví '],
+    [' I started ', ' Comencé '],
+    [' I created ', ' Creé '],
+    [' I invented ', ' Inventé '],
+    [' I published ', ' Publiqué '],
+    [' I released ', ' Lancé '],
+    [' I opened ', ' Abrí '],
+    [' I worked with ', ' Trabajé con '],
+    [' I worked on ', ' Trabajé en '],
+    [' I worked as ', ' Trabajé como '],
+    [' I served as ', ' Serví como '],
+    [' I later served as ', ' Más tarde serví como '],
+    [' and later ', ' y más tarde '],
+    [' and in ', ' y en '],
+    [' In ', ' En '],
+    [' During ', ' Durante '],
+    [' After ', ' Después de '],
+    [' by ', ' para '],
+    [' my story still helps people ', ' mi historia todavía ayuda a las personas a '],
+    [' My legacy remains ', ' Mi legado sigue siendo '],
+    [' like a ', ' como un/una '],
+    [' beside a ', ' junto a un/una '],
+    [' for this history.', ' por esta historia.']
+  ];
+  let out = html;
+  replacements.forEach(([a,b]) => { out = out.split(a).join(b); });
+  return out;
+}
+function setLanguage(lang){
+  currentLang = lang;
+  els.langEnBtn.classList.toggle('active', lang==='en');
+  els.langEsBtn.classList.toggle('active', lang==='es');
+  els.langEnBtn.className = `${lang==='en' ? 'btnBlue' : 'btnGray'} langBtn ${lang==='en' ? 'active' : ''}`.trim();
+  els.langEsBtn.className = `${lang==='es' ? 'btnBlue' : 'btnGray'} langBtn ${lang==='es' ? 'active' : ''}`.trim();
+  applyLanguage();
+  fillCurrentWordBanks();
+  resetStoryPreview();
+  if (currentSubject) {
+    updateProgressPanel();
+    renderFigures();
+  }
+  renderSubjects();
+}
+function fillCurrentWordBanks(){
+  const bank = WORD_BANKS_BY_LANG[currentLang] || WORD_BANKS_BY_LANG.en;
+  Object.keys(bank).forEach(key => fillSelect(els[key], bank[key]));
+  randomizeWords();
+}
+function applyLanguage(){
+  document.documentElement.lang = currentLang === 'es' ? 'es' : 'en';
+  els.heroTitle.textContent = t('heroTitle');
+  els.heroDesc.textContent = t('heroDesc');
+  els.subjectsTitle.textContent = t('chooseSubject');
+  els.figuresTitle.textContent = t('chooseFigure');
+  els.backToSubjectsBtn.textContent = t('backToSubjects');
+  els.backToFiguresBtn.textContent = t('backToFigures');
+  els.randomFigureBtn.textContent = t('randomFigure');
+  els.randomCurrentSubjectBtn.textContent = t('randomFigure');
+  els.storyBadge.textContent = t('readyToCreate');
+  document.querySelector('.panel h2').textContent = t('storyBuilder');
+  document.querySelector('label[for="adjective1"]').textContent = t('adjective1');
+  document.querySelector('label[for="adjective2"]').textContent = t('adjective2');
+  document.querySelector('label[for="noun1"]').textContent = t('noun1');
+  document.querySelector('label[for="noun2"]').textContent = t('noun2');
+  document.querySelector('label[for="place1"]').textContent = t('place1');
+  document.querySelector('label[for="verb1"]').textContent = t('verb1');
+  document.querySelector('label[for="verb2"]').textContent = t('verb2');
+  document.querySelector('label[for="adverb1"]').textContent = t('adverb1');
+  document.querySelector('label[for="quality1"]').textContent = t('quality1');
+  document.querySelector('label[for="celebration1"]').textContent = t('celebration1');
+  els.buildBtn.textContent = t('buildStory');
+  els.randomWordsBtn.textContent = t('randomFill');
+  els.speakBtn.textContent = t('playBack');
+  els.stopBtn.textContent = t('stopVoice');
+  document.querySelector('.small').innerHTML = currentLang==='es' ? 'La historia permanece oculta hasta que presiones <strong>Crear Historia</strong>.' : 'The story stays hidden until <strong>Build Story</strong> is pressed.';
+  els.legendTitle.textContent = t('legendTitle');
+  renderLegendTable();
+  els.trackerTitle.textContent = t('progressTracker');
+  els.resetProgressBtn.textContent = t('resetProgress');
+  if(!currentFigure){ els.selectedName.textContent = t('chooseFigurePrompt'); els.selectedSubtitle.textContent = t('chooseFigureSub'); }
+}
+
+function renderLegendTable(){
+  const thead = document.querySelector('.legendTable thead');
+  const tbody = document.querySelector('.legendTable tbody');
+  if(!thead || !tbody) return;
+  thead.innerHTML = `<tr><th>${t('wordType')}</th><th>${t('role')}</th><th>${t('examples')}</th></tr>`;
+  tbody.innerHTML = `
+    <tr><td><span class="choice choice-noun">${t('noun')}</span></td><td>${t('nounRole')}</td><td>${t('nounEx')}</td></tr>
+    <tr><td><span class="choice choice-place">${t('properNoun')}</span></td><td>${t('properRole')}</td><td>${t('properEx')}</td></tr>
+    <tr><td><span class="choice choice-verb">${t('verb')}</span></td><td>${t('verbRole')}</td><td>${t('verbEx')}</td></tr>
+    <tr><td><span class="choice choice-adjective">${t('adjective')}</span></td><td>${t('adjectiveRole')}</td><td>${t('adjectiveEx')}</td></tr>
+    <tr><td><span class="choice choice-adverb">${t('adverb')}</span></td><td>${t('adverbRole')}</td><td>${t('adverbEx')}</td></tr>
+    <tr><td><span class="choice choice-trait">${t('trait')}</span></td><td>${t('traitRole')}</td><td>${t('traitEx')}</td></tr>
+    <tr><td><span class="choice choice-history">${t('history')}</span></td><td>${t('historyRole')}</td><td>${t('historyEx')}</td></tr>`;
+}
+
 function wrapHistory(value){ return `<span class="choice choice-history">${value}</span>`; }
+function getFigureImage(fig){ return WGLT_IMAGES[fig.imageKey] || ''; }
+function getSubjectImage(subject){ return WGLT_SUBJECT_IMAGES[subject.id] || ''; }
 function loadProgress(){ try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch(e){ return {}; } }
 function saveProgress(){ localStorage.setItem(storageKey, JSON.stringify(progress)); }
-function ensureSubjectProgress(subjectId){ if(!progress[subjectId]) progress[subjectId] = {completed:{}}; if(!progress[subjectId].completed) progress[subjectId].completed = {}; }
+function ensureSubjectProgress(subjectId){ if(!progress[subjectId]) progress[subjectId] = { completed:{} }; }
 function getCompletedCount(subject){ ensureSubjectProgress(subject.id); return Object.keys(progress[subject.id].completed).filter(id => progress[subject.id].completed[id]).length; }
 function isFigureComplete(subjectId, figureId){ ensureSubjectProgress(subjectId); return !!progress[subjectId].completed[figureId]; }
 function markFigureComplete(subjectId, figureId){ ensureSubjectProgress(subjectId); progress[subjectId].completed[figureId] = true; saveProgress(); }
 function fillSelect(selectEl, options){ selectEl.innerHTML=''; options.forEach(opt=>{ const o=document.createElement('option'); o.value=opt; o.textContent=opt; selectEl.appendChild(o); }); }
 function randomFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function switchScreen(name){ els.subjectScreen.classList.toggle('active', name==='subject'); els.figureScreen.classList.toggle('active', name==='figure'); els.builderScreen.classList.toggle('active', name==='builder'); }
-function resetStoryPreview(){ currentStory=''; els.storyText.innerHTML='<em style="color:var(--muted);">Your story is hidden right now. Pick your words, then press <strong>Build Story</strong>.</em>'; els.storyBadge.textContent='Ready to create'; els.voiceStatus.textContent='Build a story first, then press Play Back to hear it.'; }
-function randomizeWords(){ Object.keys(wordBanks).forEach(key=>{ els[key].value = randomFrom(wordBanks[key]); }); }
-function updateGlobalBadges(){ const subjectCount = subjects.length; const figureCount = subjects.reduce((sum,s)=>sum+s.figures.length,0); els.globalBadge.textContent=`${subjectCount} Subjects Loaded`; els.globalFiguresBadge.textContent=`${figureCount} Figures Ready`; }
-function renderSubjects(){ els.subjectGrid.innerHTML=''; subjects.forEach(subject=>{ const completed=getCompletedCount(subject), total=subject.figures.length; const card=document.createElement('button'); card.type='button'; card.className='cardButton'; card.innerHTML=`<div class="subjectArt"><div class="artInner"><div class="initials">${subject.initials}</div><small>300 × 300 subject tile</small></div></div><h3>${subject.name}</h3><p>${subject.hint}<br>${completed}/${total} complete</p>`; card.addEventListener('click',()=>chooseSubject(subject.id)); els.subjectGrid.appendChild(card); }); }
-function chooseSubject(subjectId){ currentSubject = subjects.find(s=>s.id===subjectId) || subjects[0]; els.subjectBadge.textContent=`${currentSubject.name} • ${currentSubject.figures.length} Figures`; els.currentSubjectBadge.textContent=currentSubject.name; renderFigures(); switchScreen('figure'); }
-function renderFigures(){ if(!currentSubject) return; els.figureGrid.innerHTML=''; currentSubject.figures.forEach(fig=>{ const done=isFigureComplete(currentSubject.id, fig.id); const card=document.createElement('button'); card.type='button'; card.className='cardButton'; card.innerHTML=`<div class="figureArt"><div class="artInner"><div class="initials">${fig.initials}</div><small>300 × 300 portrait-ready card</small></div></div><h3>${fig.name}</h3><p>${fig.short}<br>${fig.cardHint}<br>${done ? '⭐ Completed' : '☆ Not played yet'}</p>`; card.addEventListener('click',()=>chooseFigure(fig.id)); els.figureGrid.appendChild(card); }); }
+function resetStoryPreview(){ currentStory=''; currentStoryEnglish=''; els.storyText.innerHTML=currentLang==='es' ? '<em style="color:var(--muted);">Tu historia está oculta por ahora. Elige tus palabras y luego presiona <strong>Crear Historia</strong>.</em>' : '<em style="color:var(--muted);">Your story is hidden right now. Pick your words, then press <strong>Build Story</strong>.</em>'; els.storyBadge.textContent=t('readyToCreate'); els.voiceStatus.textContent=t('buildFirst'); }
+function randomizeWords(){ const bank = WORD_BANKS_BY_LANG[currentLang] || WORD_BANKS_BY_LANG.en; Object.keys(bank).forEach(key=>{ els[key].value = randomFrom(bank[key]); }); }
+function updateGlobalBadges(){ const subjectCount=subjects.length; const figureCount=subjects.reduce((sum,s)=>sum+s.figures.length,0); els.globalBadge.textContent=`${subjectCount} ${t('subjectsLoaded')}`; els.globalFiguresBadge.textContent=`${figureCount} ${t('figuresReady')}`; }
+
+function renderSubjects(){
+  els.subjectGrid.innerHTML='';
+  subjects.forEach(subject=>{
+    const completed = getCompletedCount(subject), total = subject.figures.length;
+    const imgUrl = getSubjectImage(subject);
+    const card = document.createElement('button');
+    card.type='button';
+    card.className='cardButton';
+    card.innerHTML = `
+      <div class="subjectPoster">
+        ${imgUrl
+          ? `<img src="${imgUrl}" alt="${subject.name}" class="subjectImage" loading="lazy">`
+          : `<div class="posterFallback"><div class="initials">${subject.initials}</div><small>300 × 300 subject tile</small></div>`}
+      </div>
+      <h3>${subject.name}</h3>
+      <p>${subject.hint}<br>${completed}/${total} ${currentLang==='es' ? 'completo' : 'complete'}</p>
+    `;
+    card.addEventListener('click', ()=>chooseSubject(subject.id));
+    els.subjectGrid.appendChild(card);
+  });
+}
+
+function chooseSubject(subjectId){
+  currentSubject = subjects.find(s=>s.id===subjectId) || subjects[0];
+  els.subjectBadge.textContent = `${currentSubject.name} • ${currentSubject.figures.length} Figures`;
+  els.currentSubjectBadge.textContent = currentSubject.name;
+  renderFigures();
+  switchScreen('figure');
+}
+
+function renderFigures(){
+  if(!currentSubject) return;
+  els.figureGrid.innerHTML='';
+  currentSubject.figures.forEach(fig=>{
+    const done = isFigureComplete(currentSubject.id, fig.id);
+    const imgUrl = getFigureImage(fig);
+    const card = document.createElement('button');
+    card.type='button';
+    card.className='cardButton';
+    card.innerHTML = `
+      <div class="figurePoster">
+        ${imgUrl
+          ? `<img src="${imgUrl}" alt="${fig.name}" class="figureImage" loading="lazy">`
+          : `<div class="posterFallback"><div class="initials">${fig.initials}</div><small>300 × 300 portrait-ready card</small></div>`}
+      </div>
+      <h3>${fig.name}</h3>
+      <p>${fig.short}<br>${fig.cardHint}<br>${done ? t('completed') : t('notPlayed')}</p>
+    `;
+    card.addEventListener('click', ()=>chooseFigure(fig.id));
+    els.figureGrid.appendChild(card);
+  });
+}
+
 function chooseRandomFigure(){ if(!currentSubject) return; chooseFigure(randomFrom(currentSubject.figures).id); }
-function chooseFigure(figureId){ if(!currentSubject) return; currentFigure=currentSubject.figures.find(f=>f.id===figureId) || currentSubject.figures[0]; els.selectedThumb.textContent=currentFigure.initials; els.selectedName.textContent=currentFigure.name; els.selectedSubtitle.textContent=currentFigure.short; randomizeWords(); resetStoryPreview(); updateProgressPanel(); switchScreen('builder'); }
-function getSelections(){ return { adjective1:els.adjective1.value, adjective2:els.adjective2.value, noun1:els.noun1.value, noun2:els.noun2.value, place1:els.place1.value, verb1:els.verb1.value, verb2:els.verb2.value, adverb1:els.adverb1.value, quality1:els.quality1.value, celebration1:els.celebration1.value }; }
-function updateProgressPanel(){ if(!currentSubject) return; const total=currentSubject.figures.length, complete=getCompletedCount(currentSubject), pct=total ? Math.round((complete/total)*100) : 0; els.progressTitle.textContent=`${currentSubject.name} Progress`; els.meterFill.style.width=`${pct}%`; els.meterText.textContent=`${complete} of ${total} complete • ${pct}%`; els.figureChecklist.innerHTML=''; currentSubject.figures.forEach(fig=>{ const row=document.createElement('div'); row.className='checkItem'; const done=isFigureComplete(currentSubject.id, fig.id); row.innerHTML=`<span>${fig.name}</span><span class="${done ? 'starDone' : 'starTodo'}">${done ? '⭐ Done' : '☆ To Do'}</span>`; els.figureChecklist.appendChild(row); }); }
-function buildStory(){ if(!currentFigure || !currentSubject) return; currentStory=currentFigure.template(getSelections()); els.storyText.innerHTML=currentStory; els.storyBadge.textContent=`${currentFigure.name} story ready`; els.voiceStatus.textContent='Press Play Back to hear your story.'; markFigureComplete(currentSubject.id, currentFigure.id); updateProgressPanel(); renderFigures(); renderSubjects(); }
-function speakStory(){ if(!currentStory){ els.voiceStatus.textContent='Build a story first before using playback.'; return; } if(!('speechSynthesis' in window)){ els.voiceStatus.textContent='This browser does not support speech playback.'; return; } window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(els.storyText.textContent); u.rate=0.95; u.pitch=1; u.volume=1; u.onstart=()=>els.voiceStatus.textContent='Reading story out loud...'; u.onend=()=>els.voiceStatus.textContent='Playback finished.'; u.onerror=()=>els.voiceStatus.textContent='Voice playback hit a snag on this device.'; window.speechSynthesis.speak(u); }
-function stopStory(){ if('speechSynthesis' in window){ window.speechSynthesis.cancel(); els.voiceStatus.textContent='Playback stopped.'; } }
-function init(){ Object.keys(wordBanks).forEach(key=>fillSelect(els[key], wordBanks[key])); updateGlobalBadges(); renderSubjects(); resetStoryPreview(); switchScreen('subject'); }
+
+function chooseFigure(figureId){
+  if(!currentSubject) return;
+  currentFigure = currentSubject.figures.find(f=>f.id===figureId) || currentSubject.figures[0];
+  const imgUrl = getFigureImage(currentFigure);
+  els.selectedThumb.innerHTML = imgUrl ? `<img src="${imgUrl}" alt="${currentFigure.name}">` : currentFigure.initials;
+  els.selectedName.textContent = currentFigure.name;
+  els.selectedSubtitle.textContent = currentFigure.short;
+  randomizeWords();
+  resetStoryPreview();
+  updateProgressPanel();
+  switchScreen('builder');
+}
+
+function getSelections(){
+  return {
+    adjective1:els.adjective1.value, adjective2:els.adjective2.value, noun1:els.noun1.value, noun2:els.noun2.value,
+    place1:els.place1.value, verb1:els.verb1.value, verb2:els.verb2.value, adverb1:els.adverb1.value,
+    quality1:els.quality1.value, celebration1:els.celebration1.value
+  };
+}
+
+function updateProgressPanel(){
+  if(!currentSubject) return;
+  const total=currentSubject.figures.length, complete=getCompletedCount(currentSubject), pct=total ? Math.round((complete/total)*100) : 0;
+  els.progressTitle.textContent = currentLang==='es' ? `Progreso de ${currentSubject.name}` : `${currentSubject.name} Progress`;
+  els.meterFill.style.width = `${pct}%`;
+  els.meterText.textContent = currentLang==='es' ? `${complete} de ${total} completado • ${pct}%` : `${complete} of ${total} complete • ${pct}%`;
+  els.figureChecklist.innerHTML='';
+  currentSubject.figures.forEach(fig=>{
+    const row = document.createElement('div');
+    row.className='checkItem';
+    const done = isFigureComplete(currentSubject.id, fig.id);
+    row.innerHTML = `<span>${fig.name}</span><span class="${done ? 'starDone' : 'starTodo'}">${done ? t('done') : t('todo')}</span>`;
+    els.figureChecklist.appendChild(row);
+  });
+}
+
+function buildStory(){
+  if(!currentFigure || !currentSubject) return;
+  currentStoryEnglish = currentFigure.template(getSelections());
+  currentStory = currentLang==='es' ? translateStoryHtmlToSpanish(currentStoryEnglish) : currentStoryEnglish;
+  els.storyText.innerHTML = currentStory;
+  els.storyBadge.textContent = `${currentFigure.name} ${t('storyReadySuffix')}`;
+  els.voiceStatus.textContent = t('buildFirst');
+  markFigureComplete(currentSubject.id, currentFigure.id);
+  updateProgressPanel();
+  renderFigures();
+  renderSubjects();
+}
+
+function speakStory(){
+  if(!currentStory){ els.voiceStatus.textContent=t('noStory'); return; }
+  if(!('speechSynthesis' in window)){ els.voiceStatus.textContent=t('noSpeech'); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(stripHtml(currentStory));
+  u.lang = currentLang==='es' ? 'es-ES' : 'en-US';
+  u.rate = 0.95; u.pitch = 1; u.volume = 1;
+  u.onstart = ()=> els.voiceStatus.textContent=t('reading');
+  u.onend = ()=> els.voiceStatus.textContent=t('finished');
+  u.onerror = ()=> els.voiceStatus.textContent=t('speechError');
+  window.speechSynthesis.speak(u);
+}
+
+function stopStory(){ if('speechSynthesis' in window){ window.speechSynthesis.cancel(); els.voiceStatus.textContent=t('stopped'); } }
+
+function resetAllProgress(){
+  const ok = window.confirm(t('resetConfirm'));
+  if(!ok) return;
+  progress = {};
+  try { localStorage.removeItem(storageKey); } catch(e) {}
+  if(currentSubject){ updateProgressPanel(); renderFigures(); }
+  renderSubjects();
+  els.voiceStatus.textContent = t('resetDone');
+}
+
+function notifyWixReady(){
+  if(window.parent){
+    window.parent.postMessage({ type:'WGLT_READY' }, '*');
+  }
+}
+
+function init(){
+  fillCurrentWordBanks();
+  applyLanguage();
+  updateGlobalBadges();
+  renderSubjects();
+  resetStoryPreview();
+  switchScreen('subject');
+  notifyWixReady();
+}
 
 els.backToSubjectsBtn.addEventListener('click',()=>{ stopStory(); renderSubjects(); switchScreen('subject'); });
 els.backToFiguresBtn.addEventListener('click',()=>{ stopStory(); renderFigures(); switchScreen('figure'); });
@@ -356,16 +1083,13 @@ els.buildBtn.addEventListener('click',buildStory);
 els.randomWordsBtn.addEventListener('click',()=>{ randomizeWords(); resetStoryPreview(); });
 els.speakBtn.addEventListener('click',speakStory);
 els.stopBtn.addEventListener('click',stopStory);
+els.resetProgressBtn.addEventListener('click',resetAllProgress);
+els.langEnBtn.addEventListener('click',()=>setLanguage('en'));
+els.langEsBtn.addEventListener('click',()=>setLanguage('es'));
 [els.adjective1,els.adjective2,els.noun1,els.noun2,els.place1,els.verb1,els.verb2,els.adverb1,els.quality1,els.celebration1].forEach(el=>el.addEventListener('change',resetStoryPreview));
+window.addEventListener('load', notifyWixReady);
+setTimeout(notifyWixReady, 1500);
 init();
-</script>
-<script>
-/* Notify Wix loader that the HTML game is ready */
-window.addEventListener("load", function () {
-  if (window.parent) {
-    window.parent.postMessage({ type: "WGLT_READY" }, "*");
-  }
-});
 </script>
 </body>
 </html>
