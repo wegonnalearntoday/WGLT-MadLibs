@@ -125,6 +125,8 @@
     }
     button:hover{transform:translateY(-1px)}
     button:active{transform:translateY(1px)}
+    button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    button:disabled:hover{transform:none}
     .btnBlue{background:linear-gradient(180deg,#4f7380,#264b5a);color:#fff;border:1px solid rgba(255,255,255,.08)}
     .btnGreen{background:linear-gradient(180deg,#3d7a7c,#234f51);color:#fff;border:1px solid rgba(255,255,255,.08)}
     .btnGold{background:linear-gradient(180deg,#e0b15a,#b97933);color:#231208;border:1px solid rgba(255,255,255,.15)}
@@ -382,6 +384,8 @@
     .choice-trait{background:rgba(164,98,255,.24);color:#efe0ff}
     .choice-history{background:rgba(27,138,90,.28);color:#c9ffe7}
 
+    .voiceControls{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .voiceControls.stickyMobile{position:sticky;bottom:10px;background:linear-gradient(180deg, rgba(20,56,74,.95), rgba(13,41,53,.98));padding:10px;border:2px solid rgba(215,162,74,.55);border-radius:16px;box-shadow:var(--shadow);z-index:5}
     .meterCard{
       border:2px solid rgba(215,162,74,.5);
       border-radius:16px;
@@ -438,6 +442,8 @@
       .legendTable{
         min-width:620px;
       }
+      .voiceControls{grid-template-columns:1fr}
+      .voiceControls.stickyMobile{bottom:8px}
     }
   </style>
 </head>
@@ -504,9 +510,7 @@
         <div class="btnRow">
           <button class="btnGreen" id="buildBtn">Build Story</button>
           <button class="btnGold" id="randomWordsBtn">Random Fill</button>
-          <button class="btnBlue" id="speakBtn">Play Back</button>
         </div>
-        <div class="btnRow single"><button class="btnGray" id="stopBtn">Stop Voice</button></div>
         <div class="small">The story stays hidden until <strong>Build Story</strong> is pressed.</div>
       </div>
 
@@ -529,6 +533,10 @@
           </table></div>
         </div>
         <div class="storyBox"><div id="storyText"><em style="color:var(--muted);">Your story is hidden right now. Pick your words, then press <strong>Build Story</strong>.</em></div></div>
+        <div class="voiceControls stickyMobile" id="voiceControls">
+          <button class="btnBlue" id="speakBtn" disabled>Play Back</button>
+          <button class="btnGray" id="stopBtn" disabled>Stop Voice</button>
+        </div>
         <div class="footerNote" id="voiceStatus">Build a story first, then press Play Back to hear it.</div>
       </div>
     </div>
@@ -627,6 +635,13 @@ const WORD_BANKS_BY_LANG = {
 
 let currentLang = 'en';
 let currentStoryEnglish = '';
+
+function setVoiceButtonsEnabled(enabled){
+  const speakBtn = document.getElementById('speakBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  if(speakBtn) speakBtn.disabled = !enabled;
+  if(stopBtn) stopBtn.disabled = !enabled;
+}
 
 /* Put all figure image URLs here */
 const WGLT_IMAGES = {
@@ -1129,7 +1144,7 @@ function markFigureComplete(subjectId, figureId){ ensureSubjectProgress(subjectI
 function fillSelect(selectEl, options){ selectEl.innerHTML=''; options.forEach(opt=>{ const o=document.createElement('option'); o.value=opt; o.textContent=opt; selectEl.appendChild(o); }); }
 function randomFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function switchScreen(name){ els.subjectScreen.classList.toggle('active', name==='subject'); els.figureScreen.classList.toggle('active', name==='figure'); els.builderScreen.classList.toggle('active', name==='builder'); }
-function resetStoryPreview(){ currentStory=''; currentStoryEnglish=''; els.storyText.innerHTML=currentLang==='es' ? '<em style="color:var(--muted);">Tu historia está oculta por ahora. Elige tus palabras y luego presiona <strong>Crear Historia</strong>.</em>' : '<em style="color:var(--muted);">Your story is hidden right now. Pick your words, then press <strong>Build Story</strong>.</em>'; els.storyBadge.textContent=t('readyToCreate'); els.voiceStatus.textContent=t('buildFirst'); }
+function resetStoryPreview(){ currentStory=''; currentStoryEnglish=''; els.storyText.innerHTML=currentLang==='es' ? '<em style="color:var(--muted);">Tu historia está oculta por ahora. Elige tus palabras y luego presiona <strong>Crear Historia</strong>.</em>' : '<em style="color:var(--muted);">Your story is hidden right now. Pick your words, then press <strong>Build Story</strong>.</em>'; els.storyBadge.textContent=t('readyToCreate'); els.voiceStatus.textContent=t('buildFirst'); setVoiceButtonsEnabled(false); }
 function randomizeWords(){ const bank = WORD_BANKS_BY_LANG[currentLang] || WORD_BANKS_BY_LANG.en; Object.keys(bank).forEach(key=>{ els[key].value = randomFrom(bank[key]); }); }
 function updateGlobalBadges(){ const subjectCount=subjects.length; const figureCount=subjects.reduce((sum,s)=>sum+s.figures.length,0); els.globalBadge.textContent=`${subjectCount} ${t('subjectsLoaded')}`; els.globalFiguresBadge.textContent=`${figureCount} ${t('figuresReady')}`; }
 
@@ -1235,6 +1250,7 @@ function buildStory(){
   els.storyText.innerHTML = currentStory;
   els.storyBadge.textContent = `${currentFigure.name} ${t('storyReadySuffix')}`;
   els.voiceStatus.textContent = t('buildFirst');
+  setVoiceButtonsEnabled(true);
   markFigureComplete(currentSubject.id, currentFigure.id);
   updateProgressPanel();
   renderFigures();
