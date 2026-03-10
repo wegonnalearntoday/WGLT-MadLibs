@@ -384,6 +384,43 @@
     .choice-trait{background:rgba(164,98,255,.24);color:#efe0ff}
     .choice-history{background:rgba(27,138,90,.28);color:#c9ffe7}
 
+    @keyframes speakPulse{
+      0%,100%{box-shadow:0 0 0 0 rgba(215,162,74,.0), 0 0 0 0 rgba(215,162,74,.0)}
+      50%{box-shadow:0 0 0 7px rgba(215,162,74,.45), 0 0 18px 4px rgba(215,162,74,.22)}
+    }
+    @keyframes arrowBounce{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(6px)}
+    }
+    #speakBtn.story-ready{
+      animation:speakPulse 1.4s ease-in-out infinite;
+      border-color:rgba(215,162,74,.9) !important;
+      outline:2px solid rgba(215,162,74,.5);
+    }
+    .playback-arrow-wrap{
+      display:none;
+      justify-content:flex-start;
+      align-items:center;
+      gap:6px;
+      margin-bottom:4px;
+      padding-left:4px;
+    }
+    .playback-arrow-wrap.show{display:flex}
+    .playback-arrow{
+      font-size:1.1rem;
+      animation:arrowBounce 0.8s ease-in-out infinite;
+      color:var(--gold);
+      line-height:1;
+    }
+    .playback-arrow-label{
+      font-size:.82rem;
+      font-weight:800;
+      color:var(--gold);
+      font-family:var(--headline-font);
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      opacity:.92;
+    }
     .voiceControls{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .voiceControls.stickyMobile{position:sticky;bottom:10px;background:linear-gradient(180deg, rgba(20,56,74,.95), rgba(13,41,53,.98));padding:10px;border:2px solid rgba(215,162,74,.55);border-radius:16px;box-shadow:var(--shadow);z-index:5}
     .meterCard{
@@ -533,6 +570,11 @@
           </table></div>
         </div>
         <div class="storyBox"><div id="storyText"><em style="color:var(--muted);">Your story is hidden right now. Pick your words, then press <strong>Build Story</strong>.</em></div></div>
+        <div class="playback-arrow-wrap" id="playbackArrow">
+          <span class="playback-arrow">▼</span>
+          <span class="playback-arrow-label">Press Play Back to hear your story!</span>
+          <span class="playback-arrow" style="animation-delay:.2s">▼</span>
+        </div>
         <div class="voiceControls stickyMobile" id="voiceControls">
           <button class="btnBlue" id="speakBtn" disabled>Play Back</button>
           <button class="btnGray" id="stopBtn" disabled>Stop Voice</button>
@@ -639,8 +681,17 @@ let currentStoryEnglish = '';
 function setVoiceButtonsEnabled(enabled){
   const speakBtn = document.getElementById('speakBtn');
   const stopBtn = document.getElementById('stopBtn');
-  if(speakBtn) speakBtn.disabled = !enabled;
+  const arrowWrap = document.getElementById('playbackArrow');
+  if(speakBtn){
+    speakBtn.disabled = !enabled;
+    if(enabled){ speakBtn.classList.add('story-ready'); }
+    else { speakBtn.classList.remove('story-ready'); }
+  }
   if(stopBtn) stopBtn.disabled = !enabled;
+  if(arrowWrap){
+    if(enabled){ arrowWrap.classList.add('show'); }
+    else { arrowWrap.classList.remove('show'); }
+  }
 }
 
 /* Put all figure image URLs here */
@@ -1255,11 +1306,23 @@ function buildStory(){
   updateProgressPanel();
   renderFigures();
   renderSubjects();
+  // Scroll to the story / Play Back section
+  const voiceSection = document.getElementById('playbackArrow');
+  if(voiceSection){
+    setTimeout(()=>{
+      voiceSection.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 80);
+  }
 }
 
 function speakStory(){
   if(!currentStory){ els.voiceStatus.textContent=t('noStory'); return; }
   if(!('speechSynthesis' in window)){ els.voiceStatus.textContent=t('noSpeech'); return; }
+  // Stop pulsing once user clicks Play Back
+  const speakBtn = document.getElementById('speakBtn');
+  const arrowWrap = document.getElementById('playbackArrow');
+  if(speakBtn) speakBtn.classList.remove('story-ready');
+  if(arrowWrap) arrowWrap.classList.remove('show');
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(stripHtml(currentStory));
   u.lang = currentLang==='es' ? 'es-ES' : 'en-US';
